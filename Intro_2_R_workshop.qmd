@@ -1,0 +1,40 @@
+---
+title: "An Introduction to R"
+subtitle: "A UWYO R-Ladies Workshop"
+author:
+  - "Daniel Hintz"
+  - "Seth Rankins"
+institute: 
+  - "University Of Wyoming - Statisitcs"
+  - "University Of Wyoming - Haub School"
+date: today
+engine: knitr
+webr: 
+  show-startup-message: false  
+format:
+  revealjs:
+    highlight-style: github
+    slide-number: c/t
+filters: 
+ - webr
+---
+
+## Lets Write out first Function
+
+```{webr-r}
+func <- function(variables) {
+  
+}
+func()
+```
+
+
+## Slide 2
+
+```{r}
+#| include: true
+#| eval: false
+#| echo: true
+
+2+2
+```
