@@ -531,7 +531,7 @@
   // Document level settings ----
 
   // Determine if we need to install R packages
-  globalThis.qwebrInstallRPackagesList = [''];
+  globalThis.qwebrInstallRPackagesList = ['ggplot2', 'dplyr'];
 
   // Specify possible locations to search for the repository
   globalThis.qwebrPackageRepoURLS = ['https://repo.r-wasm.org/'];
@@ -553,7 +553,7 @@
   };
 
   // Store cell data
-  globalThis.qwebrCellDetails = [{"options":{"dpi":72,"label":"unnamed-chunk-1","output":"true","warning":"true","results":"markup","message":"true","autorun":"false","context":"interactive","read-only":"false","classes":"","out-height":"","comment":"","fig-width":7,"fig-height":5,"out-width":"700px","fig-cap":""},"id":1,"code":"func <- function(variables) {\n  \n}\nfunc()"}];
+  globalThis.qwebrCellDetails = [{"options":{"fig-width":7,"fig-cap":"","label":"unnamed-chunk-1","comment":"","context":"interactive","message":"true","out-width":"700px","read-only":"false","out-height":"","dpi":72,"autorun":"false","classes":"","output":"true","results":"markup","warning":"true","fig-height":5},"id":1,"code":"func <- function(variables) {\n  \n}\nfunc()"},{"options":{"fig-width":7,"fig-cap":"","label":"unnamed-chunk-2","comment":"","context":"interactive","message":"true","out-width":"700px","read-only":"false","out-height":"","dpi":72,"autorun":"false","classes":"","output":"true","results":"markup","warning":"true","fig-height":5},"id":2,"code":"library(dplyr)\nmtcars |> select(mpg)"}];
 
   </script>
   <script type="module">
@@ -1483,6 +1483,11 @@ Seth Rankins
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="dv">2</span><span class="sc">+</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="tidyverse" class="slide level2">
+<h2>tidyverse</h2>
+<div id="qwebr-insertion-location-2"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 

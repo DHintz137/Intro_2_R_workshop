@@ -11,6 +11,7 @@ date: today
 engine: knitr
 webr: 
   show-startup-message: false  
+  packages: ['ggplot2', 'dplyr']
 format:
   revealjs:
     highlight-style: github
@@ -37,4 +38,12 @@ func()
 #| echo: true
 
 2+2
+```
+
+
+## tidyverse
+
+```{webr-r}
+library(dplyr)
+mtcars |> select(mpg)
 ```
