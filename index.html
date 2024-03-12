@@ -12,7 +12,8 @@
 
   <meta name="author" content="Daniel Hintz">
   <meta name="author" content="Seth Rankins">
-  <meta name="dcterms.date" content="2024-02-24">
+  <meta name="author" content="Molly Caldwell">
+  <meta name="dcterms.date" content="2024-03-12">
   <title>An Introduction to R</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -98,6 +99,7 @@
     code span.wa { color: #ff5555; } /* Warning */
   </style>
   <link rel="stylesheet" href="Intro_2_R_workshop_files/libs/revealjs/dist/theme/quarto.css">
+  <link rel="stylesheet" href="styles.css">
   <link href="Intro_2_R_workshop_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="Intro_2_R_workshop_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="Intro_2_R_workshop_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -531,7 +533,7 @@
   // Document level settings ----
 
   // Determine if we need to install R packages
-  globalThis.qwebrInstallRPackagesList = [''];
+  globalThis.qwebrInstallRPackagesList = ['ggplot2', 'dplyr', 'purrr', 'tictoc'];
 
   // Specify possible locations to search for the repository
   globalThis.qwebrPackageRepoURLS = ['https://repo.r-wasm.org/'];
@@ -553,7 +555,7 @@
   };
 
   // Store cell data
-  globalThis.qwebrCellDetails = [{"options":{"dpi":72,"label":"unnamed-chunk-1","output":"true","warning":"true","results":"markup","message":"true","autorun":"false","context":"interactive","read-only":"false","classes":"","out-height":"","comment":"","fig-width":7,"fig-height":5,"out-width":"700px","fig-cap":""},"id":1,"code":"func <- function(variables) {\n  \n}\nfunc()"}];
+  globalThis.qwebrCellDetails = [{"id":1,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-1","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"i <- function(x) print(x^2) # same as `i <- function(x) x^2`\ni(3)\nj <- function(x) return(x^2)\nj(3)"},{"id":2,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-2","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"k <- function(x) {X = x^2; Y = x^3}\nk(3) # nothing is printed to the screen, last assignment is returned as an invisible()\npaste(\"k(3):\", k(3))\nk_val = k(3); k_val"},{"id":3,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-3","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"l <- function(x) {X = x^2; Y = x^3; Z = x^4; invisible(x+1)}\nl(3)\npaste(\"l(3):\", l(3))"},{"id":4,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-4","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"m <- function(x){X = x^2; invisible(x+1); Y = x^3}\npaste(m(3))"},{"id":5,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-5","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"f <- function(x) x^2\nf\nformals(f) #> $x\nbody(f) #> x^2\nenvironment(f) # <environment: R_GlobalEnv>"},{"id":6,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-6","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"k <- function() list(ls(),environment())\nk() # k() has its own environment\nlist(ls()[1:5],environment())"},{"id":7,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-7","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"f <- function(a = 1) a\nf()"},{"id":8,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-8","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"f <- function(a, b = NULL) c(a,b)\nf(1)\nf(1,2)"},{"id":9,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-9","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"message(\"notify the user, though we are not indacting any problems\")\n\nwarning(\"notify the user of something potentially problematic\")\n\nstop(\"A condition has been meet that is enough of ploblem that we want to force an error\")"},{"id":10,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-10","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"k <- function(a,b) a^(b)\nf <- function(a, b = NULL) {\n  if(is.null(b)){\n    warning(\"{warning()} b is missing, just returning `a`\")\n    return(a)\n  } \n  if(a < 0 && b == 1/2){\n    stop(\"{stop()} can't take the sqrt of a negative number\")\n  } else {\n    message(\"{message()} function completion without condiational execution\")\n    a^(b)\n  }\n}\nk(1) # error without user defined error handling \nf(1) # here we see the `NULL` Conditional Execution\nf(-2,1/2)\nf(3,2)"},{"id":11,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-11","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"f <- function(a, b, c) {\n  if(missing(c)) {\n  return(sum(a,b))\n    }\n  if(!missing(c)) {\n  return(sum(a,b,c))\n    }\n}\nf(1,2)\nf(1,2,3)"},{"id":12,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-12","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"rnorm\n\nrandom_num_gen <- function(x, ...) {\n  rnorm(x, ...)\n}\n\nset.seed(1); random_num_gen(5)\nset.seed(1); random_num_gen(5, mean = 3, sd = 1.5)"},{"id":13,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-13","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"sapply(1:2, function(x) x + 1)"},{"id":14,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-14","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"purrr::map_int(1:2, ~.x + 1)"},{"id":15,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-15","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"(X <- cbind(x1 = 3, x2 = c(4:1, 2:5)))\n\napply(X, 1, mean) # row-wise \napply(X, 2, mean) # col-wise"},{"id":16,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-16","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"(Y <- list(a = 1:10, beta = exp(-3:3)))\n\nsapply(Y, quantile)"},{"id":17,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-17","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"try2 <- function(x,m){tryCatch({x}, error =function(e) {finally = print(m)})}\n(Y <- list(a = 1:10, beta = exp(-3:3)))\n\ntry2(vapply(Y,quantile),\"Error:`FUN.VALUE` is missing\")\nvapply(Y,quantile,seq(0, 1, 0.25))"},{"id":18,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-18","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"W <- warpbreaks; head(W,3) \n\n# contingency table \ntapply(W$breaks, subset(W, select = -breaks), sum) "},{"id":19,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-19","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"(Z <- lapply(rep(2,2), function(x) data.frame(x=rnorm(x))))\n\ndo.call(cbind, Z)"},{"id":20,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-20","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"abs_dif <- function(x,y) abs(x-y)\nmapply(abs_dif, c(2,10), c(2,30))\n\nmapply(sum, c(1,2,3,5), c(1,2,3,10),c(1,2,3,15))"},{"id":21,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-21","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"abs_dif <- function(x,y) abs(x-y)\nMap(abs_dif, c(2,10), c(2,30))\n\nMap(sum, c(1,2,3,5), c(1,2,3,10),c(1,2,3,15))"},{"id":22,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-22","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"set.seed(1)\n(L <- purrr::map(1:3, ~ sample(1:3, 5, replace = T)))\n\nintersect(c(1,2,3), c(1,2,4)) # demo of intersect()\nReduce(intersect,L)"},{"id":23,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-23","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"1:10 |> map(rnorm, n = 5)\n\n# You can also use an anonymous function\n1:10 |> map(\\(x) rnorm(5, x))"},{"id":24,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-24","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"x <- list(1, 1, 1)\ny <- list(10, 20, 30)\n\nmap2(x, y, \\(x, y) x + y)"},{"id":25,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-25","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"x <- list(1, 1, 1)\ny <- list(10, 20, 30)\nz <- list(100, 200, 300)\n\npmap(list(x, y, z), sum)"},{"id":26,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-26","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"set.seed(1)\n(L <- purrr::map(1:3, ~ sample(1:3, 5, replace = T)))\n\npurrr::reduce(L,intersect)"},{"id":27,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-27","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"is_positive <- function(x) {\n\n}"},{"id":28,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-28","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"is_positive <- function(x) {\n  if (x > 0) {\n    TRUE\n  } else {\n    FALSE\n  }\n}\n\nis_positive(5)"},{"id":29,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-29","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"sqrt_safe <- function(x) {\n\n}"},{"id":30,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-30","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"sqrt_safe <- function(x) {\n  if (x < 0) {\n    stop(\"Cannot take square root of a negative number.\")\n  }\n  sqrt(x)\n}"},{"id":31,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-31","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"find_first_negative <- function(vec) {\n\n}"},{"id":32,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-32","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"find_first_negative <- function(vec) {\n  for (i in 1:length(vec)) {\n    if (vec[i] < 0) {\n      return(i)\n    }\n  }\n  NA\n}"},{"id":33,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-33","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"halve_until_less_than_one <- function(x) {\n\n}"},{"id":34,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-34","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"halve_until_less_than_one <- function(x) {\n  while (x >= 1) {\n    x <- x / 2\n  }\n  x\n}"},{"id":35,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-35","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"scale_columns <- function(mat) {\n  apply(mat, 2, function(x) (x - mean(x)) / sd(x))\n}"},{"id":36,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-36","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"library(purrr)\n\n}"},{"id":37,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-37","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"library(purrr)\ncalculate_means <- function(list_of_vectors) {\n  map(list_of_vectors, mean)\n}"},{"id":38,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-38","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"multiply_and_add <- function(...) {\n  \n}"},{"id":39,"options":{"read-only":"false","warning":"true","results":"markup","out-height":"","label":"unnamed-chunk-39","fig-cap":"","context":"interactive","message":"true","output":"true","dpi":72,"out-width":"700px","classes":"","comment":"","fig-height":5,"autorun":"false","fig-width":7},"code":"multiply_and_add <- function(...) {\n  vectors <- list(...)\n  result <- 0\n  for (i in seq_along(vectors)) {\n    result <- result + sum(vectors[[i]] * i)\n  }\n  result\n}"}];
 
   </script>
   <script type="module">
@@ -1450,7 +1452,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 
 <section id="title-slide" class="quarto-title-block center">
   <h1 class="title">An Introduction to R</h1>
-  <p class="subtitle">A UWYO R-Ladies Workshop</p>
+  <p class="subtitle">A R-Ladies Workshop</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -1458,7 +1460,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 Daniel Hintz 
 </div>
         <p class="quarto-title-affiliation">
-            University Of Wyoming - Statisitcs
+            University Of Wyoming <br>Statisitcs
           </p>
     </div>
 <div class="quarto-title-author">
@@ -1466,23 +1468,584 @@ Daniel Hintz
 Seth Rankins 
 </div>
         <p class="quarto-title-affiliation">
-            University Of Wyoming - Haub School
+            University Of Wyoming <br>The Haub School
+          </p>
+    </div>
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Molly Caldwell 
+</div>
+        <p class="quarto-title-affiliation">
+            University Of Wyoming <br>Zoology &amp; Physiology
           </p>
     </div>
 </div>
 
-  <p class="date">2024-02-24</p>
+  <p class="date">2024-03-12</p>
 </section>
-<section id="lets-write-out-first-function" class="slide level2">
-<h2>Lets Write out first Function</h2>
+<section id="outline-1" class="slide level2">
+<h2>Outline (1)</h2>
+<div>
+<div style="font-size: 0.65em;">
+<ul>
+<li class="fragment">Logicals</li>
+<li class="fragment">R function Basics
+<ul>
+<li class="fragment">Structure</li>
+<li class="fragment">Some practise to start</li>
+</ul></li>
+<li class="fragment">R function’s Extended
+<ul>
+<li class="fragment"><code>formals()</code>, <code>body()</code>, and <code>environment()</code></li>
+<li class="fragment">More on Enviroments</li>
+<li class="fragment">Defualt Argument Assignment</li>
+<li class="fragment"><code>NULL</code> Conditional Execution</li>
+<li class="fragment"><code>message()</code>, <code>warning()</code>, and <code>stop()</code></li>
+<li class="fragment">Conditional Execution with <code>missing()</code></li>
+<li class="fragment">Using the Three Dots Ellipsis, <code>...</code></li>
+<li class="fragment">Anonymous Functions</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="outline-2" class="slide level2">
+<h2>Outline (2)</h2>
+<div>
+<div style="font-size: 0.65em;">
+<ul>
+<li class="fragment">Functional Programming (<code>base</code> R, <code>purrr</code>)</li>
+<li class="fragment">An introduction to Parallelism with <code>furrr</code></li>
+<li class="fragment">Practice Questions</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="logicals" class="slide level2">
+<h2>Logicals</h2>
+<ul>
+<li>Seth I’m leaving this slide is a place holder</li>
+<li><code>if</code>, <code>else</code>, <code>for</code>,<code>while</code></li>
+<li>if you could cover, or provide a table (with their uses) of the following infix operators <code>$</code>, <code>^</code>, <code>*</code>, <code>/</code>, <code>+</code>, <code>-</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>==</code>, <code>!=</code>, <code>!</code>, <code>&amp;</code>, <code>&amp;&amp;</code>, <code>|</code>, <code>||</code>, <code>&lt;-</code></li>
+<li>Add slides as you see fit</li>
+</ul>
+</section>
+<section>
+<section id="r-function-basics" class="title-slide slide level1 center">
+<h1>R function Basics</h1>
+
+</section>
+<section id="function-structure" class="slide level2">
+<h2>Function Structure</h2>
+<blockquote>
+<p>Like a grammitcally correct sentance, functions require a function name, argument and a returned object</p>
+</blockquote>
+<div class="fragment">
+<p><img data-src="images/function-structure.png" height="300"></p>
+</div>
+</section>
+<section id="lets-write-some-functions" class="slide level2">
+<h2>Lets Write some Functions</h2>
 <div id="qwebr-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section>
-<section id="slide-2" class="slide level2">
-<h2>Slide 2</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="dv">2</span><span class="sc">+</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="fragment">
+<div style="margin-top: 10px;">
+
 </div>
+<div id="qwebr-insertion-location-2"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div class="fragment">
+<div style="margin-top: 10px;">
+
+</div>
+<div id="qwebr-insertion-location-3"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div class="fragment">
+<div style="margin-top: 10px;">
+
+</div>
+<div id="qwebr-insertion-location-4"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</section></section>
+<section id="functions-should-return-output" class="title-slide slide level1 center" data-background-color="#447099">
+<h1><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:white;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> Functions Should Return Output</h1>
+
+</section>
+
+<section>
+<section id="r-functions-extended" class="title-slide slide level1 center">
+<h1>R function’s Extended</h1>
+
+</section>
+<section id="function-formals-body-and-environment" class="slide level2">
+<h2>Function <code>formals()</code>, <code>body()</code> and <code>environment()</code></h2>
+<div id="qwebr-insertion-location-5"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</section>
+<section id="more-on-enviroments" class="slide level2">
+<h2>More on Enviroments</h2>
+<div id="qwebr-insertion-location-6"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</section>
+<section id="defualt-argument-assignment" class="slide level2">
+<h2>Defualt Argument Assignment</h2>
+<div id="qwebr-insertion-location-7"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</section>
+<section id="null-conditional-execution-1" class="slide level2">
+<h2><code>NULL</code> Conditional Execution (1)</h2>
+<div id="qwebr-insertion-location-8"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</section>
+<section id="message-warning-and-stop" class="slide level2">
+<h2><code>message()</code>, <code>warning()</code>, and <code>stop()</code></h2>
+<div id="qwebr-insertion-location-9"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</section>
+<section id="null-conditional-execution-2" class="slide level2">
+<h2><code>NULL</code> Conditional Execution (2)</h2>
+<div id="qwebr-insertion-location-10"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</section>
+<section id="conditional-execution-with-missing" class="slide level2">
+<h2>Conditional Execution with <code>missing()</code></h2>
+<div id="qwebr-insertion-location-11"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</section>
+<section id="using-the-three-dots-ellipsis-..." class="slide level2">
+<h2>Using the Three Dots Ellipsis, <code>...</code></h2>
+<div id="qwebr-insertion-location-12"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</section>
+<section id="anonymous-functions" class="slide level2">
+<h2>Anonymous Functions</h2>
+<div style="font-size: 0.7em;">
+<blockquote>
+<p>“An Anonymous Function (also known as a lambda experssion) is a function definition that is not bound to an identifier. That is, it is a function that is created and used, but never assigned to a variable” (see <a href="https://coolbutuseless.github.io/2019/03/13/anonymous-functions-in-r-part-1/">link</a>)</p>
+</blockquote>
+</div>
+<div class="fragment">
+<div style="margin-top: 40px;">
+
+</div>
+<div style="font-size: 0.65em;">
+<p><code>base</code> R anonymous function syntax:</p>
+</div>
+<div id="qwebr-insertion-location-13"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div class="fragment">
+<div style="margin-top: 40px;">
+
+</div>
+<div style="font-size: 0.65em;">
+<p><code>purrr</code>’s anonymous function syntax:</p>
+</div>
+<div id="qwebr-insertion-location-14"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</section>
+<section id="functional-programming-with-base-r" class="slide level2">
+<h2>Functional Programming with <code>base</code> R</h2>
+<div style="font-size: 0.45em;">
+<table>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>apply(X, MARGIN, FUN, ...)</code></td>
+<td>Applies a function over the margins (rows or columns) of an array or matrix.</td>
+</tr>
+<tr class="even">
+<td><code>sapply(X, FUN, ...)</code></td>
+<td>Simplifies the result of <code>lapply()</code> by attempting to reduce the result to a vector, matrix, or higher-dimensional array.</td>
+</tr>
+<tr class="odd">
+<td><code>vapply(X, FUN, FUN.VALUE)</code></td>
+<td>Similar to <code>sapply()</code>, but with a specified type of return value, making it safer and faster by avoiding unexpected type coercion.</td>
+</tr>
+<tr class="even">
+<td><code>lapply(X, FUN, ...)</code></td>
+<td>Applies a function to each element of a list or vector and returns a list.</td>
+</tr>
+<tr class="odd">
+<td><code>tapply(X, INDEX, FUN = NULL)</code></td>
+<td>Applies a function over subsets of a vector, array, or data frame, split by the levels of a factor or list of factors</td>
+</tr>
+<tr class="even">
+<td><code>do.call(what, args, ...)</code></td>
+<td>constructs and executes a function call from a name or a function and a list of arguments to be passed to it</td>
+</tr>
+<tr class="odd">
+<td><code>mapply(FUN, ...)</code></td>
+<td>A multivariate version of <code>sapply()</code>, applies a function to the 1st elements of each argument, then the 2nd elements of each argument, and so on.</td>
+</tr>
+<tr class="even">
+<td><code>Map(f, ...)</code></td>
+<td>Similar to <code>mapply()</code> but always returns a list, regardless of the output type.</td>
+</tr>
+<tr class="odd">
+<td><code>Reduce(f, x, init, ...)</code></td>
+<td>Applies a function successively to elements of a vector from left to right so as to reduce the vector to a single value.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="base-r-examples-1" class="slide level2">
+<h2><code>base</code> R Examples (1)</h2>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1"><code>apply</code></a></li><li><a href="#tabset-1-2"><code>sapply</code></a></li><li><a href="#tabset-1-3"><code>lapply</code></a></li><li><a href="#tabset-1-4"><code>vapply</code></a></li><li><a href="#tabset-1-5"><code>tapply</code></a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<div id="qwebr-insertion-location-15"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-1-2">
+<div id="qwebr-insertion-location-16"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-1-3">
+
+</div>
+<div id="tabset-1-4">
+<div id="qwebr-insertion-location-17"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-1-5">
+<div id="qwebr-insertion-location-18"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</div>
+</div>
+</section>
+<section id="base-r-examples-2" class="slide level2">
+<h2><code>base</code> R Examples (2)</h2>
+<div class="panel-tabset">
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1"><code>do.call</code></a></li><li><a href="#tabset-2-2"><code>mapply</code></a></li><li><a href="#tabset-2-3"><code>Map</code></a></li><li><a href="#tabset-2-4"><code>Reduce</code></a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1">
+<div id="qwebr-insertion-location-19"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-2-2">
+<div id="qwebr-insertion-location-20"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-2-3">
+<div id="qwebr-insertion-location-21"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-2-4">
+<div id="qwebr-insertion-location-22"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div style="font-size: 0.65em;">
+<ul>
+<li>“[1] 3 2” indicates that among the three random samples generated, the numbers 3 and 2 are the only ones that appear at least once in all three vectors.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="functional-programming-with-purrr" class="slide level2">
+<h2>Functional programming with <code>purrr</code></h2>
+<div style="font-size: 0.65em;">
+<table>
+<colgroup>
+<col style="width: 44%">
+<col style="width: 55%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>map(.x, .f, ...)</code></td>
+<td>Applies a function to each element of a list or vector and returns a list. Useful for operations on list elements.</td>
+</tr>
+<tr class="even">
+<td><code>map2(.x, .y, .f, ...)</code></td>
+<td>Applies a function to the corresponding elements of two vectors/lists, useful for element-wise operations on two inputs.</td>
+</tr>
+<tr class="odd">
+<td><code>pmap(.l, .f, ...)</code></td>
+<td>Applies a function to each element of a list or vector in parallel, taking multiple arguments from parallel lists or vectors.</td>
+</tr>
+<tr class="even">
+<td><code>reduce(.x, .f, ..., .init, .)</code></td>
+<td>Reduces a list or vector to a single value by iteratively applying a function that takes two arguments.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="purrr-examples" class="slide level2">
+<h2><code>purrr</code> Examples</h2>
+<div class="panel-tabset">
+<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1"><code>map</code></a></li><li><a href="#tabset-3-2"><code>map2</code></a></li><li><a href="#tabset-3-3"><code>pmap</code></a></li><li><a href="#tabset-3-4"><code>reduce</code></a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1">
+<div id="qwebr-insertion-location-23"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-3-2">
+<div id="qwebr-insertion-location-24"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-3-3">
+<div id="qwebr-insertion-location-25"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-3-4">
+<div id="qwebr-insertion-location-26"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</div>
+</div>
+</section>
+<section id="parrel-proccesing-with-furrr" class="slide level2">
+<h2>Parrel Proccesing with <code>furrr</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>fib_n <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
+<span id="cb1-2"><a href=""></a>    <span class="cf">if</span> ((n <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|</span> (n <span class="sc">==</span> <span class="dv">1</span>)) </span>
+<span id="cb1-3"><a href=""></a>        <span class="fu">return</span>(<span class="dv">1</span>)</span>
+<span id="cb1-4"><a href=""></a>    <span class="cf">else</span></span>
+<span id="cb1-5"><a href=""></a>        <span class="fu">return</span>(<span class="fu">fib_n</span>(n<span class="dv">-1</span>) <span class="sc">+</span> <span class="fu">fib_n</span>(n<span class="dv">-2</span>))</span>
+<span id="cb1-6"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="fragment">
+<div style="margin-top: 20px;">
+
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">1</span>)</span>
+<span id="cb2-2"><a href=""></a><span class="fu">tic</span>()</span>
+<span id="cb2-3"><a href=""></a>num <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">35</span> <span class="sc">|&gt;</span> <span class="fu">future_map</span>(fib_n)</span>
+<span id="cb2-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 20.321 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div style="margin-top: 20px;">
+
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">9</span>)</span>
+<span id="cb3-2"><a href=""></a><span class="fu">tic</span>()</span>
+<span id="cb3-3"><a href=""></a>num <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">35</span> <span class="sc">|&gt;</span> <span class="fu">future_map</span>(fib_n)</span>
+<span id="cb3-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 18.477 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="a-note-on-parallelism" class="slide level2">
+<h2>A Note on Parallelism</h2>
+<blockquote>
+<p>Parallel processing is not a magic bullet, ultimately performance depends on Overhead of Parallelization, Task Granularity, and Algorithm efficiency</p>
+</blockquote>
+</section>
+<section id="bootstraps-in-parrelel" class="slide level2">
+<h2>Bootstraps in Parrelel</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>expand for source code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>boot <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">B =</span> <span class="dv">5000</span>, m, theta.f, <span class="at">w =</span> <span class="dv">1</span>, rdist, ...) {</span>
+<span id="cb4-2"><a href=""></a>  <span class="fu">plan</span>(multisession, <span class="at">workers =</span> w) <span class="co"># Set up for parallel execution</span></span>
+<span id="cb4-3"><a href=""></a>  b_indices <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>B <span class="co"># vector of indices for bootstrapping iterations</span></span>
+<span id="cb4-4"><a href=""></a>  iterate_func <span class="ot">&lt;-</span> <span class="cf">function</span>(b) { <span class="co"># apply for each bootstrap iteration</span></span>
+<span id="cb4-5"><a href=""></a>    <span class="cf">if</span> (m <span class="sc">==</span> <span class="st">"p"</span>) {</span>
+<span id="cb4-6"><a href=""></a>      d.b <span class="ot">&lt;-</span> <span class="fu">rdist</span>(...) <span class="co"># parametric bootstrap</span></span>
+<span id="cb4-7"><a href=""></a>    } <span class="cf">else</span> <span class="cf">if</span> (m <span class="sc">==</span> <span class="st">"np"</span>) {</span>
+<span id="cb4-8"><a href=""></a>      d.b <span class="ot">&lt;-</span> x[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(x), <span class="at">replace =</span> <span class="cn">TRUE</span>)] <span class="co"># nonparametric bootstrap</span></span>
+<span id="cb4-9"><a href=""></a>    } <span class="cf">else</span> {</span>
+<span id="cb4-10"><a href=""></a>      <span class="fu">stop</span>(<span class="st">"possible arguments for m is 'p' (parametric) or 'np' (nonparametric)"</span>)</span>
+<span id="cb4-11"><a href=""></a>    }</span>
+<span id="cb4-12"><a href=""></a>    <span class="fu">theta.f</span>(d.b)</span>
+<span id="cb4-13"><a href=""></a>  }</span>
+<span id="cb4-14"><a href=""></a>  <span class="co"># future_map_dbl to apply iterate_func over each index in parallel with proper seeding</span></span>
+<span id="cb4-15"><a href=""></a>  t.s <span class="ot">&lt;-</span> <span class="fu">future_map_dbl</span>(b_indices, iterate_func, <span class="at">.options =</span> <span class="fu">furrr_options</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb4-16"><a href=""></a>  <span class="fu">samp.o</span>(t.s) <span class="co"># Summarize the bootstrap results</span></span>
+<span id="cb4-17"><a href=""></a>}</span>
+<span id="cb4-18"><a href=""></a>samp.o <span class="ot">=</span> <span class="cf">function</span>(t.s) {</span>
+<span id="cb4-19"><a href=""></a>  <span class="fu">round</span>(<span class="fu">c</span>(<span class="at">mean=</span><span class="fu">mean</span>(t.s),<span class="at">sd=</span><span class="fu">sd</span>(t.s),<span class="at">lower=</span><span class="fu">quantile</span>(t.s, <span class="fl">0.025</span>, <span class="at">names =</span> F),</span>
+<span id="cb4-20"><a href=""></a>  <span class="at">upper=</span> <span class="fu">quantile</span>(t.s, <span class="fl">0.975</span>, <span class="at">names =</span> F)),<span class="at">digits=</span><span class="dv">6</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(purrr, future, tictoc)</span>
+<span id="cb5-2"><a href=""></a>boot <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">B =</span> <span class="dv">5000</span>, m, theta.f, <span class="at">w =</span> <span class="dv">1</span>, rdist, ...) {} <span class="co"># see above</span></span>
+<span id="cb5-3"><a href=""></a>samp.o <span class="ot">=</span> <span class="cf">function</span>(t.s) {} <span class="co"># see above</span></span>
+<span id="cb5-4"><a href=""></a>theta.f <span class="ot">=</span> <span class="cf">function</span>(d.b) {p <span class="ot">=</span> <span class="fu">sum</span>(d.b)<span class="sc">/</span>n; p<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>p)} </span>
+<span id="cb5-5"><a href=""></a></span>
+<span id="cb5-6"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">1</span>); n <span class="ot">=</span> <span class="dv">800000</span>; y <span class="ot">=</span> <span class="dv">480</span>; B <span class="ot">=</span> <span class="dv">5000</span></span>
+<span id="cb5-7"><a href=""></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, y), <span class="fu">rep</span>(<span class="dv">0</span>, n<span class="sc">-</span>y)); phat <span class="ot">&lt;-</span> <span class="fu">sum</span>(data)<span class="sc">/</span>n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div style="margin-top: 20px;">
+
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="fu">tic</span>()</span>
+<span id="cb6-2"><a href=""></a>(b_p_future <span class="ot">&lt;-</span> <span class="fu">boot</span>(data, <span class="at">B =</span> B, <span class="at">m =</span> <span class="st">"p"</span>, <span class="at">theta.f =</span> theta.f, <span class="at">w =</span> <span class="dv">1</span>,</span>
+<span id="cb6-3"><a href=""></a>                    <span class="at">rdist =</span> rbinom, <span class="at">n =</span> n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> phat))</span>
+<span id="cb6-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 49.859 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div style="margin-top: 20px;">
+
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a><span class="fu">tic</span>()</span>
+<span id="cb7-2"><a href=""></a>(<span class="at">b_p_future =</span> <span class="fu">boot</span>(data, <span class="at">B =</span> B, <span class="at">m =</span> <span class="st">"p"</span>, <span class="at">theta.f =</span> theta.f, <span class="at">w =</span> <span class="dv">9</span>,</span>
+<span id="cb7-3"><a href=""></a>                    <span class="at">rdist =</span> rbinom, <span class="at">n =</span> n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> phat))</span>
+<span id="cb7-4"><a href=""></a><span class="fu">toc</span>() <span class="co"># 8.014 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="lets-try-some-exercises" class="title-slide slide level1 center" data-background-color="#447099">
+<h1><svg aria-hidden="true" role="img" viewbox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:white;overflow:visible;position:relative;"><path d="M64 96c0-35.3 28.7-64 64-64H512c35.3 0 64 28.7 64 64V352H512V96H128V352H64V96zM0 403.2C0 392.6 8.6 384 19.2 384H620.8c10.6 0 19.2 8.6 19.2 19.2c0 42.4-34.4 76.8-76.8 76.8H76.8C34.4 480 0 445.6 0 403.2zM281 209l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM393 175l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"></path></svg> Lets try Some exercises</h1>
+
+</section>
+<section id="q1" class="slide level2">
+<h2>Q1</h2>
+<div class="panel-tabset">
+<ul id="tabset-4" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-4-1">Question</a></li><li><a href="#tabset-4-2">Answer</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1">
+<!--Basic If-Else-->
+<p>Write an R function named <code>is_positive</code> that takes a single numeric input and returns TRUE if the number is positive, and FALSE otherwise.</p>
+<div id="qwebr-insertion-location-27"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-4-2">
+<div id="qwebr-insertion-location-28"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</div>
+</div>
+</section>
+<section id="q2" class="slide level2">
+<h2>Q2</h2>
+<!--Error Handling with Stop-->
+<div class="panel-tabset">
+<ul id="tabset-5" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-5-1">Question</a></li><li><a href="#tabset-5-2">Answer</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1">
+<p>Create a function named <code>sqrt_safe</code> that computes the square root of a number. If the input is negative, the function should stop execution and return an error message “Cannot take square root of a negative number.”</p>
+<div id="qwebr-insertion-location-29"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-5-2">
+<div id="qwebr-insertion-location-30"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</div>
+</div>
+</section>
+<section id="q3" class="slide level2">
+<h2>Q3</h2>
+<!--Loop with Break-->
+<div class="panel-tabset">
+<ul id="tabset-6" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-6-1">Question</a></li><li><a href="#tabset-6-2">Answer</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1">
+<p>Write a function named <code>find_first_negative</code> that takes a numeric vector and returns the position of the first negative number. If there are no negative numbers, return <code>NA</code>.</p>
+<div id="qwebr-insertion-location-31"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-6-2">
+<div id="qwebr-insertion-location-32"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</div>
+</div>
+</section>
+<section id="q4" class="slide level2">
+<h2>Q4</h2>
+<!--While Loop-->
+<div class="panel-tabset">
+<ul id="tabset-7" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-7-1">Question</a></li><li><a href="#tabset-7-2">Answer</a></li></ul>
+<div class="tab-content">
+<div id="tabset-7-1">
+<p>Create a function named halve_until_less_than_one that takes a single numeric argument and keeps halving it until it is less than 1, then returns the result.</p>
+<div id="qwebr-insertion-location-33"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-7-2">
+<div id="qwebr-insertion-location-34"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</div>
+</div>
+</section>
+<section id="q5" class="slide level2">
+<h2>Q5</h2>
+<!--Apply Function-->
+<div class="panel-tabset">
+<ul id="tabset-8" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-8-1">Answer</a></li></ul>
+<div class="tab-content">
+<div id="tabset-8-1">
+<div id="qwebr-insertion-location-35"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</div>
+</div>
+</section>
+<section id="q6" class="slide level2">
+<h2>Q6</h2>
+<!--`map` with purr-->
+<div class="panel-tabset">
+<ul id="tabset-9" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-9-1">Question</a></li><li><a href="#tabset-9-2">Answer</a></li></ul>
+<div class="tab-content">
+<div id="tabset-9-1">
+<p>Using the purrr package, write a function that takes a list of numeric vectors and returns a list of their means. Use <code>purrr::map</code>.</p>
+<div id="qwebr-insertion-location-36"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-9-2">
+<div id="qwebr-insertion-location-37"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</div>
+</div>
+</section>
+<section id="q7" class="slide level2">
+<h2>Q7</h2>
+<!--Using the Ellipsis (...)-->
+<div class="panel-tabset">
+<ul id="tabset-10" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-10-1">Question</a></li><li><a href="#tabset-10-2">Answer</a></li></ul>
+<div class="tab-content">
+<div id="tabset-10-1">
+<p>Create a function named multiply_and_add that takes an arbitrary number of numeric vectors. It should multiply each vector by its index in the argument list and then sum all the results into a single number.</p>
+<div id="qwebr-insertion-location-38"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+<div id="tabset-10-2">
+<div id="qwebr-insertion-location-39"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+</div>
+</div>
+</div>
+</section></section>
+<section id="thank-you" class="title-slide slide level1 center" data-background-color="#447099">
+<h1>Thank you!!</h1>
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
@@ -1645,7 +2208,7 @@ Seth Rankins
         previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'none',
+        transition: 'slide',
 
         // Transition speed (default/fast/slow)
         transitionSpeed: 'default',
