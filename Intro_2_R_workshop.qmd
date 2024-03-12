@@ -59,8 +59,8 @@ filters:
 
 -   Seth I'm leaving this slide is a place holder
 -   `if`, `else`, `for`,`while`
--   if you could cover, or provide a table (with their uses) of the following infix operators `$`, `^`, `*`, `/`, `+`, `-`, `>`, `>=`, `<`, `<=`, `==`, `!=`, `!`, `&`, `&&`, `|`, `||`, `<-`
--   Add slides as you see fit
+-   If your taking suggestions maybe you could provide a table (with their uses) of the following infix operators `$`, `^`, `*`, `/`, `+`, `-`, `>`, `>=`, `<`, `<=`, `==`, `!=`, `!`, `&`, `&&`, `|`, `||`, `<-`, 😅, if so that would be great thanks!
+-   Also, please add slides as you see fit
 
 # R function Basics
 
