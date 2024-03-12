@@ -1,0 +1,10 @@
+/*
+ie in R use the following chunk options
+#| class-source: wide_chunck 
+#| classes: wide_chunck 
+*/
+
+.wide_chunck {
+height: 500px;
+width: 1300px;
+}

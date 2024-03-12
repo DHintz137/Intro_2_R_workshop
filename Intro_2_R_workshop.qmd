@@ -1,49 +1,726 @@
 ---
 title: "An Introduction to R"
-subtitle: "A UWYO R-Ladies Workshop"
+subtitle: "A R-Ladies Workshop"
 author:
   - "Daniel Hintz"
   - "Seth Rankins"
+  - "Molly Caldwell"
 institute: 
-  - "University Of Wyoming - Statisitcs"
-  - "University Of Wyoming - Haub School"
+  - "University Of Wyoming <br>Statisitcs"
+  - "University Of Wyoming <br>The Haub School"
+  - "University Of Wyoming <br>Zoology & Physiology"
 date: today
 engine: knitr
 webr: 
   show-startup-message: false  
-  packages: ['ggplot2', 'dplyr']
+  packages: ['ggplot2', 'dplyr', 'purrr', 'tictoc']
 format:
   revealjs:
+    theme: default
+    css: styles.css
+    transition: slide
     highlight-style: github
     slide-number: c/t
 filters: 
  - webr
 ---
 
-## Lets Write out first Function
+## Outline (1)
+
+::: incremental
+::: {style="font-size: 0.65em;"}
+-   Logicals
+-   R function Basics
+    - Structure
+    - Some practise to start
+-   R function's Extended   
+    - `formals()`, `body()`, and `environment()`
+    - More on Enviroments
+    - Defualt Argument Assignment
+    - `NULL` Conditional Execution
+    - `message()`, `warning()`, and `stop()`
+    - Conditional Execution with `missing()`
+    - Using the Three Dots Ellipsis, `...`
+    - Anonymous Functions
+:::
+:::
+
+## Outline (2) 
+
+::: incremental
+::: {style="font-size: 0.65em;"}
+-   Functional Programming (`base` R, `purrr`)
+-   An introduction to Parallelism with `furrr`
+-   Practice Questions
+:::
+:::
+
+## Logicals
+
+-   Seth I'm leaving this slide is a place holder
+-   `if`, `else`, `for`,`while`
+-   if you could cover, or provide a table (with their uses) of the following infix operators `$`, `^`, `*`, `/`, `+`, `-`, `>`, `>=`, `<`, `<=`, `==`, `!=`, `!`, `&`, `&&`, `|`, `||`, `<-`
+-   Add slides as you see fit
+
+# R function Basics
+
+## Function Structure 
+
+> Like a grammitcally correct sentance, functions require a function name, argument and a returned object
+
+. . .
+
+![](images/function-structure.png){height="300px"}
+
+## Lets Write some Functions
 
 ```{webr-r}
-func <- function(variables) {
-  
-}
-func()
+i <- function(x) print(x^2) # same as `i <- function(x) x^2`
+i(3)
+j <- function(x) return(x^2)
+j(3)
 ```
 
+. . .
 
-## Slide 2
+::: {style="margin-top: 10px;"}
+:::
+
+```{webr-r}
+k <- function(x) {X = x^2; Y = x^3}
+k(3) # nothing is printed to the screen, last assignment is returned as an invisible()
+paste("k(3):", k(3))
+k_val = k(3); k_val
+```
+
+. . .
+
+::: {style="margin-top: 10px;"}
+:::
+
+```{webr-r}
+l <- function(x) {X = x^2; Y = x^3; Z = x^4; invisible(x+1)}
+l(3)
+paste("l(3):", l(3))
+```
+
+. . .
+
+::: {style="margin-top: 10px;"}
+:::
+
+```{webr-r}
+m <- function(x){X = x^2; invisible(x+1); Y = x^3}
+paste(m(3))
+```
+
+# `r fontawesome::fa("triangle-exclamation", "white")` Functions Should Return Output {background-color="#447099"}
+
+# R function's Extended  
+
+## Function `formals()`, `body()` and `environment()`
+
+```{webr-r}
+f <- function(x) x^2
+f
+formals(f) #> $x
+body(f) #> x^2
+environment(f) # <environment: R_GlobalEnv>
+```
+
+## More on Enviroments
+
+```{webr-r}
+k <- function() list(ls(),environment())
+k() # k() has its own environment
+list(ls()[1:5],environment())
+```
+
+## Defualt Argument Assignment
+
+```{webr-r}
+f <- function(a = 1) a
+f()
+```
+
+## `NULL` Conditional Execution (1)
+
+```{webr-r}
+f <- function(a, b = NULL) c(a,b)
+f(1)
+f(1,2)
+```
+
+## `message()`, `warning()`, and `stop()`
+
+```{webr-r}
+message("notify the user, though we are not indacting any problems")
+
+warning("notify the user of something potentially problematic")
+
+stop("A condition has been meet that is enough of ploblem that we want to force an error")
+```
+
+## `NULL` Conditional Execution (2)
+
+```{webr-r}
+k <- function(a,b) a^(b)
+f <- function(a, b = NULL) {
+  if(is.null(b)){
+    warning("{warning()} b is missing, just returning `a`")
+    return(a)
+  } 
+  if(a < 0 && b == 1/2){
+    stop("{stop()} can't take the sqrt of a negative number")
+  } else {
+    message("{message()} function completion without condiational execution")
+    a^(b)
+  }
+}
+k(1) # error without user defined error handling 
+f(1) # here we see the `NULL` Conditional Execution
+f(-2,1/2)
+f(3,2)
+```
+
+## Conditional Execution with `missing()`
+
+```{webr-r}
+f <- function(a, b, c) {
+  if(missing(c)) {
+  return(sum(a,b))
+    }
+  if(!missing(c)) {
+  return(sum(a,b,c))
+    }
+}
+f(1,2)
+f(1,2,3)
+```
+
+## Using the Three Dots Ellipsis, `...`
+
+```{webr-r}
+rnorm
+
+random_num_gen <- function(x, ...) {
+  rnorm(x, ...)
+}
+
+set.seed(1); random_num_gen(5)
+set.seed(1); random_num_gen(5, mean = 3, sd = 1.5)
+```
+
+## Anonymous Functions
+
+::: {style="font-size: 0.7em;"}
+> "An Anonymous Function (also known as a lambda experssion) is a function definition that is not bound to an identifier. That is, it is a function that is created and used, but never assigned to a variable" (see [link](https://coolbutuseless.github.io/2019/03/13/anonymous-functions-in-r-part-1/))
+:::
+
+. . .
+
+::: {style="margin-top: 40px;"}
+:::
+
+::: {style="font-size: 0.65em;"}
+`base` R anonymous function syntax:
+:::
+
+```{webr-r}
+sapply(1:2, function(x) x + 1)
+```
+
+. . .
+
+::: {style="margin-top: 40px;"}
+:::
+
+::: {style="font-size: 0.65em;"}
+`purrr`’s anonymous function syntax:
+:::
+
+```{webr-r}
+purrr::map_int(1:2, ~.x + 1)
+```
+
+## Functional Programming with `base` R
+
+::: {style="font-size: 0.45em;"}
+| Function                       | Description                                                                                                                                       |
+|------------------------------------|------------------------------------|
+| `apply(X, MARGIN, FUN, ...)`   | Applies a function over the margins (rows or columns) of an array or matrix.                                                                      |
+| `sapply(X, FUN, ...)`          | Simplifies the result of `lapply()` by attempting to reduce the result to a vector, matrix, or higher-dimensional array.                          |
+| `vapply(X, FUN, FUN.VALUE)`    | Similar to `sapply()`, but with a specified type of return value, making it safer and faster by avoiding unexpected type coercion.                |
+| `lapply(X, FUN, ...)`          | Applies a function to each element of a list or vector and returns a list.                                                                        |
+| `tapply(X, INDEX, FUN = NULL)` | Applies a function over subsets of a vector, array, or data frame, split by the levels of a factor or list of factors                             |
+| `do.call(what, args, ...)`     | constructs and executes a function call from a name or a function and a list of arguments to be passed to it                                      |
+| `mapply(FUN, ...)`             | A multivariate version of `sapply()`, applies a function to the 1st elements of each argument, then the 2nd elements of each argument, and so on. |
+| `Map(f, ...)`                  | Similar to `mapply()` but always returns a list, regardless of the output type.                                                                   |
+| `Reduce(f, x, init, ...)`      | Applies a function successively to elements of a vector from left to right so as to reduce the vector to a single value.                          |
+:::
+
+## `base` R Examples (1)
+
+::: panel-tabset
+### `apply`
+
+```{webr-r}
+(X <- cbind(x1 = 3, x2 = c(4:1, 2:5)))
+
+apply(X, 1, mean) # row-wise 
+apply(X, 2, mean) # col-wise
+```
+
+### `sapply`
+
+```{webr-r}
+(Y <- list(a = 1:10, beta = exp(-3:3)))
+
+sapply(Y, quantile)
+```
+
+### `lapply`
+
+```{webr}
+(Y <- list(a = 1:10, beta = exp(-3:3)))
+
+lapply(Y, quantile)
+```
+
+### `vapply`
+
+```{webr-r}
+try2 <- function(x,m){tryCatch({x}, error =function(e) {finally = print(m)})}
+(Y <- list(a = 1:10, beta = exp(-3:3)))
+
+try2(vapply(Y,quantile),"Error:`FUN.VALUE` is missing")
+vapply(Y,quantile,seq(0, 1, 0.25))
+```
+
+### `tapply`
+
+```{webr-r}
+W <- warpbreaks; head(W,3) 
+
+# contingency table 
+tapply(W$breaks, subset(W, select = -breaks), sum) 
+```
+:::
+
+## `base` R Examples (2)
+
+::: panel-tabset
+### `do.call`
+
+```{webr-r}
+(Z <- lapply(rep(2,2), function(x) data.frame(x=rnorm(x))))
+
+do.call(cbind, Z)
+```
+
+### `mapply`
+
+```{webr-r}
+abs_dif <- function(x,y) abs(x-y)
+mapply(abs_dif, c(2,10), c(2,30))
+
+mapply(sum, c(1,2,3,5), c(1,2,3,10),c(1,2,3,15))
+```
+
+### `Map`
+
+```{webr-r}
+abs_dif <- function(x,y) abs(x-y)
+Map(abs_dif, c(2,10), c(2,30))
+
+Map(sum, c(1,2,3,5), c(1,2,3,10),c(1,2,3,15))
+```
+
+### `Reduce`
+
+```{webr-r}
+set.seed(1)
+(L <- purrr::map(1:3, ~ sample(1:3, 5, replace = T)))
+
+intersect(c(1,2,3), c(1,2,4)) # demo of intersect()
+Reduce(intersect,L)
+```
+
+::: {style="font-size: 0.65em;"}
+-   "\[1\] 3 2" indicates that among the three random samples generated, the numbers 3 and 2 are the only ones that appear at least once in all three vectors.
+:::
+:::
+
+## Functional programming with `purrr`
+
+::: {style="font-size: 0.65em;"}
+| Function                        | Description                                                                                                                   |
+|--------------------------------|----------------------------------------|
+| `map(.x, .f, ...)`              | Applies a function to each element of a list or vector and returns a list. Useful for operations on list elements.            |
+| `map2(.x, .y, .f, ...)`         | Applies a function to the corresponding elements of two vectors/lists, useful for element-wise operations on two inputs.      |
+| `pmap(.l, .f, ...)`             | Applies a function to each element of a list or vector in parallel, taking multiple arguments from parallel lists or vectors. |
+| `reduce(.x, .f, ..., .init, .)` | Reduces a list or vector to a single value by iteratively applying a function that takes two arguments.                       |
+:::
+
+## `purrr` Examples
+
+::: panel-tabset
+### `map`
+
+```{webr-r}
+1:10 |> map(rnorm, n = 5)
+
+# You can also use an anonymous function
+1:10 |> map(\(x) rnorm(5, x))
+```
+
+### `map2`
+
+```{webr-r}
+x <- list(1, 1, 1)
+y <- list(10, 20, 30)
+
+map2(x, y, \(x, y) x + y)
+```
+
+### `pmap`
+
+```{webr-r}
+x <- list(1, 1, 1)
+y <- list(10, 20, 30)
+z <- list(100, 200, 300)
+
+pmap(list(x, y, z), sum)
+```
+
+### `reduce`
+
+```{webr-r}
+set.seed(1)
+(L <- purrr::map(1:3, ~ sample(1:3, 5, replace = T)))
+
+purrr::reduce(L,intersect)
+```
+:::
+
+## Parrel Proccesing with `furrr`
 
 ```{r}
-#| include: true
+#| echo: true
+#| eval: false
+fib_n <- function(n) {
+    if ((n == 0) | (n == 1)) 
+        return(1)
+    else
+        return(fib_n(n-1) + fib_n(n-2))
+}
+```
+
+. . .
+
+::: {style="margin-top: 20px;"}
+:::
+
+```{r}
+#| echo: true
+#| eval: false
+plan(multisession, workers = 1)
+tic()
+num <- 1:35 |> future_map(fib_n)
+toc() # 20.321 sec elapsed
+```
+
+. . .
+
+::: {style="margin-top: 20px;"}
+:::
+
+```{r}
+#| echo: true
+#| eval: false
+plan(multisession, workers = 9)
+tic()
+num <- 1:35 |> future_map(fib_n)
+toc() # 18.477 sec elapsed
+```
+
+## A Note on Parallelism
+
+> Parallel processing is not a magic bullet, ultimately performance depends on Overhead of Parallelization, Task Granularity, and Algorithm efficiency
+
+## Bootstraps in Parrelel
+
+```{r}
+#| eval: false
+#| echo: true
+#| code-fold: true
+#| code-summary: "expand for source code"
+
+boot <- function(x, B = 5000, m, theta.f, w = 1, rdist, ...) {
+  plan(multisession, workers = w) # Set up for parallel execution
+  b_indices <- 1:B # vector of indices for bootstrapping iterations
+  iterate_func <- function(b) { # apply for each bootstrap iteration
+    if (m == "p") {
+      d.b <- rdist(...) # parametric bootstrap
+    } else if (m == "np") {
+      d.b <- x[sample(1:length(x), replace = TRUE)] # nonparametric bootstrap
+    } else {
+      stop("possible arguments for m is 'p' (parametric) or 'np' (nonparametric)")
+    }
+    theta.f(d.b)
+  }
+  # future_map_dbl to apply iterate_func over each index in parallel with proper seeding
+  t.s <- future_map_dbl(b_indices, iterate_func, .options = furrr_options(seed = TRUE))
+  samp.o(t.s) # Summarize the bootstrap results
+}
+samp.o = function(t.s) {
+  round(c(mean=mean(t.s),sd=sd(t.s),lower=quantile(t.s, 0.025, names = F),
+  upper= quantile(t.s, 0.975, names = F)),digits=6)}
+```
+
+. . .
+
+```{r}
 #| eval: false
 #| echo: true
 
-2+2
+pacman::p_load(purrr, future, tictoc)
+boot <- function(x, B = 5000, m, theta.f, w = 1, rdist, ...) {} # see above
+samp.o = function(t.s) {} # see above
+theta.f = function(d.b) {p = sum(d.b)/n; p/(1-p)} 
+
+set.seed(1); n = 800000; y = 480; B = 5000
+data <- c(rep(1, y), rep(0, n-y)); phat <- sum(data)/n
 ```
 
+. . .
 
-## tidyverse
+::: {style="margin-top: 20px;"}
+:::
+
+```{r}
+#| eval: false
+#| echo: true
+
+tic()
+(b_p_future <- boot(data, B = B, m = "p", theta.f = theta.f, w = 1,
+                    rdist = rbinom, n = n, size = 1, prob = phat))
+toc() # 49.859 sec elapsed
+```
+
+. . .
+
+::: {style="margin-top: 20px;"}
+:::
+
+```{r}
+#| eval: false
+#| echo: true
+
+tic()
+(b_p_future = boot(data, B = B, m = "p", theta.f = theta.f, w = 9,
+                    rdist = rbinom, n = n, size = 1, prob = phat))
+toc() # 8.014 sec elapsed
+```
+
+```{webr}
+set.seed(1)
+list_of_dfs <- lapply(1:3, function(i) {
+  data.frame(A = sample(1:100, 5), B = sample(1:100, 5))
+})
+do.call(rbind,list_of_dfs)
+```
+
+# `r fontawesome::fa("laptop-code", "white")` Lets try Some exercises {background-color="#447099"}
+
+## Q1
+
+::: panel-tabset
+### Question
+
+<!--Basic If-Else-->
+
+Write an R function named `is_positive` that takes a single numeric input and returns TRUE if the number is positive, and FALSE otherwise.
 
 ```{webr-r}
-library(dplyr)
-mtcars |> select(mpg)
+is_positive <- function(x) {
+
+}
 ```
+
+### Answer
+
+```{webr-r}
+is_positive <- function(x) {
+  if (x > 0) {
+    TRUE
+  } else {
+    FALSE
+  }
+}
+
+is_positive(5)
+```
+:::
+
+## Q2
+
+<!--Error Handling with Stop-->
+
+::: panel-tabset
+### Question
+
+Create a function named `sqrt_safe` that computes the square root of a number. If the input is negative, the function should stop execution and return an error message "Cannot take square root of a negative number."
+
+```{webr-r}
+sqrt_safe <- function(x) {
+
+}
+```
+
+### Answer
+
+```{webr-r}
+sqrt_safe <- function(x) {
+  if (x < 0) {
+    stop("Cannot take square root of a negative number.")
+  }
+  sqrt(x)
+}
+```
+:::
+
+## Q3
+
+<!--Loop with Break-->
+
+::: panel-tabset
+### Question
+
+Write a function named `find_first_negative` that takes a numeric vector and returns the position of the first negative number. If there are no negative numbers, return `NA`.
+
+```{webr-r}
+find_first_negative <- function(vec) {
+
+}
+```
+
+### Answer
+
+```{webr-r}
+find_first_negative <- function(vec) {
+  for (i in 1:length(vec)) {
+    if (vec[i] < 0) {
+      return(i)
+    }
+  }
+  NA
+}
+```
+:::
+
+## Q4
+
+<!--While Loop-->
+
+::: panel-tabset
+### Question
+
+Create a function named halve_until_less_than_one that takes a single numeric argument and keeps halving it until it is less than 1, then returns the result.
+
+```{webr-r}
+halve_until_less_than_one <- function(x) {
+
+}
+```
+
+### Answer
+
+```{webr-r}
+halve_until_less_than_one <- function(x) {
+  while (x >= 1) {
+    x <- x / 2
+  }
+  x
+}
+```
+:::
+
+## Q5
+
+<!--Apply Function-->
+
+::: panel-tabset
+Write a function named `scale_columns` that takes a matrix and scales (normalizes) each column to have a mean of 0 and a standard deviation of 1. \### Answer
+
+```{webr-r}
+scale_columns <- function(mat) {
+  
+}
+```
+
+### Answer
+
+```{webr-r}
+scale_columns <- function(mat) {
+  apply(mat, 2, function(x) (x - mean(x)) / sd(x))
+}
+```
+:::
+
+## Q6
+
+<!--`map` with purr-->
+
+::: panel-tabset
+### Question
+
+Using the purrr package, write a function that takes a list of numeric vectors and returns a list of their means. Use `purrr::map`.
+
+```{webr-r}
+library(purrr)
+
+}
+```
+
+### Answer
+
+```{webr-r}
+library(purrr)
+calculate_means <- function(list_of_vectors) {
+  map(list_of_vectors, mean)
+}
+```
+:::
+
+## Q7
+
+<!--Using the Ellipsis (...)-->
+
+::: panel-tabset
+### Question
+
+Create a function named multiply_and_add that takes an arbitrary number of numeric vectors. It should multiply each vector by its index in the argument list and then sum all the results into a single number.
+
+```{webr-r}
+multiply_and_add <- function(...) {
+  
+}
+```
+
+### Answer
+
+```{webr-r}
+multiply_and_add <- function(...) {
+  vectors <- list(...)
+  result <- 0
+  for (i in seq_along(vectors)) {
+    result <- result + sum(vectors[[i]] * i)
+  }
+  result
+}
+```
+:::
+
+
+# Thank you!! {background-color="#447099"}
