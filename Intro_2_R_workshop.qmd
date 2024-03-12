@@ -651,7 +651,9 @@ halve_until_less_than_one <- function(x) {
 <!--Apply Function-->
 
 ::: panel-tabset
-Write a function named `scale_columns` that takes a matrix and scales (normalizes) each column to have a mean of 0 and a standard deviation of 1. \### Answer
+### Question
+
+Write a function named `scale_columns` that takes a matrix and scales (normalizes) each column to have a mean of 0 and a standard deviation of 1. 
 
 ```{webr-r}
 scale_columns <- function(mat) {
