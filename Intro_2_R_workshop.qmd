@@ -17,6 +17,7 @@ webr:
 format:
   revealjs:
     theme: default
+    scrollable: true
     css: styles.css
     transition: slide
     highlight-style: github
@@ -31,34 +32,33 @@ filters:
 ::: {style="font-size: 0.65em;"}
 -   Logicals
 -   R function Basics
-    - Structure
-    - Some practise to start
--   R function's Extended   
-    - `formals()`, `body()`, and `environment()`
-    - More on Enviroments
-    - Defualt Argument Assignment
-    - `NULL` Conditional Execution
-    - `message()`, `warning()`, and `stop()`
-    - Conditional Execution with `missing()`
-    - Using the Three Dots Ellipsis, `...`
-    - Anonymous Functions
+    -   Structure
+    -   Some practise to start
+-   R function's Extended
+    -   `formals()`, `body()`, and `environment()`
+    -   More on Enviroments
+    -   Defualt Argument Assignment
+    -   `NULL` Conditional Execution
+    -   `message()`, `warning()`, and `stop()`
+    -   Conditional Execution with `missing()`
+    -   Using the Three Dots Ellipsis, `...`
+    -   Anonymous Functions
 :::
 :::
 
-## Outline (2) 
+## Outline (2)
 
 ::: incremental
 ::: {style="font-size: 0.65em;"}
-
 -   Functional Programming with `base` R
-    - Function Look Table
-    - Examples
+    -   Function Look Table
+    -   Examples
 -   Functional programming with `purrr`
-    - Function Look Table
-    - Examples
+    -   Function Look Table
+    -   Examples
 -   Parallel Computing
-    - Parallel Computing with `furrr`
-    - A Note on Parallel Computing
+    -   Parallel Computing with `furrr`
+    -   A Note on Parallel Computing
 -   Practice Questions
 :::
 :::
@@ -72,7 +72,7 @@ filters:
 
 # [R function Basics]{style="color:white;"} {background-color="#8FA9C2"}
 
-## Function Structure 
+## Function Structure
 
 > Like a grammitcally correct sentance, functions require a function name, argument and a returned object
 
@@ -122,7 +122,7 @@ m <- function(x){X = x^2; invisible(x+1); Y = x^3}
 paste(m(3))
 ```
 
-## `r fontawesome::fa("triangle-exclamation", "white")` Functions Should Return Output {.center  background-color="#447099"}
+## `r fontawesome::fa("triangle-exclamation", "white")` Functions Should Return Output {.center background-color="#447099"}
 
 # [R function's Extended]{style="color:white;"} {background-color="#8FA9C2"}
 
@@ -366,12 +366,13 @@ Reduce(intersect,L)
 ## Functional programming with `purrr`
 
 ::: {style="font-size: 0.65em;"}
-| Function                        | Description                                                                                                                   |
+| Function                                 | Description                                                                                                                         |
 |--------------------------------|----------------------------------------|
-| `map(.x, .f, ...)`              | Applies a function to each element of a list or vector and returns a list. Useful for operations on list elements.            |
-| `map2(.x, .y, .f, ...)`         | Applies a function to the corresponding elements of two vectors/lists, useful for element-wise operations on two inputs.      |
-| `pmap(.l, .f, ...)`             | Applies a function to each element of a list or vector in parallel, taking multiple arguments from parallel lists or vectors. |
-| `reduce(.x, .f, ..., .init, .)` | Reduces a list or vector to a single value by iteratively applying a function that takes two arguments.                       |
+| `map(.x, .f, ...)`                       | Applies a function to each element of a list or vector and returns a list. Useful for operations on list elements.                  |
+| `map2(.x, .y, .f, ...)`                  | Applies a function to the corresponding elements of two vectors/lists, useful for element-wise operations on two inputs.            |
+| `pmap(.l, .f, ...)`                      | Applies a function to each element of a list or vector in parallel, taking multiple arguments from parallel lists or vectors.       |
+| `reduce(.x, .f, ..., .init, .)`          | Reduces a list or vector to a single value by iteratively applying a function that takes two arguments.                             |
+| `_dbl,` `_int` `_chr`, `_lgl and` `_vec` | `map, map2` and `pmap` variants to change output type, e.g., `map_dbl`, `map_int`, `map_chr`, `map_lgl`, `map_vec`, `map2_dbl ...`  |
 :::
 
 ## `purrr` Examples
@@ -547,7 +548,6 @@ do.call(rbind,list_of_dfs)
 
 # `r fontawesome::fa("laptop-code", "white")` [Lets try Some exercises]{style="color:white;"} {background-color="#8FA9C2"}
 
-
 ## Q1
 
 ::: panel-tabset
@@ -602,6 +602,8 @@ sqrt_safe <- function(x) {
   }
   sqrt(x)
 }
+sqrt_safe(-2)
+sqrt_safe(5)
 ```
 :::
 
@@ -631,6 +633,8 @@ find_first_negative <- function(vec) {
   }
   NA
 }
+
+find_first_negative(c(5, 2, -4, 6, -1))
 ```
 :::
 
@@ -641,7 +645,7 @@ find_first_negative <- function(vec) {
 ::: panel-tabset
 ### Question
 
-Create a function named halve_until_less_than_one that takes a single numeric argument and keeps halving it until it is less than 1, then returns the result.
+Create a function named halve_until_less_than_one that takes a single numeric argument and keeps halving it until it is less than 1, then returns the result. Keep track of the number of times the input is halved; print the function output as `list(result = x, nsteps = count)`
 
 ```{webr-r}
 halve_until_less_than_one <- function(x) {
@@ -653,11 +657,14 @@ halve_until_less_than_one <- function(x) {
 
 ```{webr-r}
 halve_until_less_than_one <- function(x) {
+  count = 0
   while (x >= 1) {
     x <- x / 2
+    count <- count+1
   }
-  x
+  list(result = x, nsteps = count)
 }
+halve_until_less_than_one(14)
 ```
 :::
 
@@ -668,9 +675,14 @@ halve_until_less_than_one <- function(x) {
 ::: panel-tabset
 ### Question
 
-Write a function named `scale_columns` that takes a matrix and scales (normalizes) each column to have a mean of 0 and a standard deviation of 1. 
+Write a function named `scale_columns` that takes a matrix and scales (normalizes) each column to have a mean of 0 and a standard deviation of 1. Use the given dataframe `M`
 
 ```{webr-r}
+set.seed(1)
+M <- as.data.frame(
+  lapply(c(400,400), function(x) data.frame(x=rgamma(x, shape =2, scale = 2)))
+  )
+
 scale_columns <- function(mat) {
   
 }
@@ -679,9 +691,18 @@ scale_columns <- function(mat) {
 ### Answer
 
 ```{webr-r}
+set.seed(1)
+M <- as.data.frame(
+  lapply(c(400,400), function(x) data.frame(x=rgamma(x, shape =2, scale = 2)))
+  )
+
 scale_columns <- function(mat) {
   apply(mat, 2, function(x) (x - mean(x)) / sd(x))
 }
+
+M_new <- scale_columns(M)
+par(mfrow = c(1,2))
+hist(M$x);hist(M_new)
 ```
 :::
 
@@ -695,18 +716,27 @@ scale_columns <- function(mat) {
 Using the purrr package, write a function that takes a list of numeric vectors and returns a list of their means. Use `purrr::map`.
 
 ```{webr-r}
-library(purrr)
+set.seed(1)
+(K <- lapply(rep(4,3), rnorm))
 
+library(purrr)
+calc_means <- function(list_of_vectors) {
+  
 }
 ```
 
 ### Answer
 
 ```{webr-r}
+set.seed(1)
+(K <- lapply(rep(4,3), rnorm))
+
 library(purrr)
-calculate_means <- function(list_of_vectors) {
-  map(list_of_vectors, mean)
+calc_means <- function(list_of_vectors) {
+  map_dbl(list_of_vectors, mean)
 }
+
+calc_means(K)
 ```
 :::
 
@@ -736,9 +766,10 @@ multiply_and_add <- function(...) {
   }
   result
 }
+multiply_and_add(c(1,2),c(3,4))
+# ie 
+sum(c(1, 2) * 1) + sum(c(3, 4) * 2)  
 ```
 :::
 
-
 # Thank you!! {.center background-color="#447099"}
-
