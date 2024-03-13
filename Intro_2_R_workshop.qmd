@@ -291,7 +291,7 @@ sapply(Y, quantile)
 
 ### `lapply`
 
-```{webr}
+```{webr-r}
 (Y <- list(a = 1:10, beta = exp(-3:3)))
 
 lapply(Y, quantile)
