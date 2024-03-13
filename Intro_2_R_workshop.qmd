@@ -31,48 +31,343 @@ filters:
 ::: {style="font-size: 0.65em;"}
 -   Logicals
 -   R function Basics
-    - Structure
-    - Some practise to start
--   R function's Extended   
-    - `formals()`, `body()`, and `environment()`
-    - More on Enviroments
-    - Defualt Argument Assignment
-    - `NULL` Conditional Execution
-    - `message()`, `warning()`, and `stop()`
-    - Conditional Execution with `missing()`
-    - Using the Three Dots Ellipsis, `...`
-    - Anonymous Functions
+    -   Structure
+    -   Some practise to start
+-   R function's Extended
+    -   `formals()`, `body()`, and `environment()`
+    -   More on Enviroments
+    -   Defualt Argument Assignment
+    -   `NULL` Conditional Execution
+    -   `message()`, `warning()`, and `stop()`
+    -   Conditional Execution with `missing()`
+    -   Using the Three Dots Ellipsis, `...`
+    -   Anonymous Functions
 :::
 :::
 
-## Outline (2) 
+## Outline (2)
 
 ::: incremental
 ::: {style="font-size: 0.65em;"}
-
--   Functional Programming with `base` R
-    - Function Look Table
-    - Examples
--   Functional programming with `purrr`
-    - Function Look Table
-    - Examples
--   Parallel Computing
-    - Parallel Computing with `furrr`
-    - A Note on Parallel Computing
+-   Functional Programming (`base` R, `purrr`)
+-   An introduction to Parallelism with `furrr`
 -   Practice Questions
 :::
 :::
 
-## Logicals
+## What is the difference between vectorization and iteration?
 
--   Seth I'm leaving this slide is a place holder
--   `if`, `else`, `for`,`while`
--   If your taking suggestions maybe you could provide a table (with their uses) of the following infix operators `$`, `^`, `*`, `/`, `+`, `-`, `>`, `>=`, `<`, `<=`, `==`, `!=`, `!`, `&`, `&&`, `|`, `||`, `<-`, 😅, if so that would be great thanks!
--   Also, please add slides as you see fit
+-   If y = 4x + 3, what is y for x = 4?
+-   If $N_{(t + 1)} = N_{t}e^{r(1 - \frac{N_{t}}{K})}$, what is *N* for *t* = 4 ($N_{1} = 2$, *r* = 0.5, and *K* = 30)?
 
-# [R function Basics]{style="color:white;"} {background-color="#8FA9C2"}
+## Now we will do the math in R.
 
-## Function Structure 
+```{webR}
+# First let's make some data to play with.
+vec_dat <- data.frame(x = 1:5,
+                      y = NA_real_)
+vec_dat
+
+loop_dat <- data.frame(t = 1:5,
+                       N = NA_real_)
+loop_dat
+
+# What is the difference between vectorization and iteration?
+
+vec_dat$y <- 4*vec_dat$x + 3
+vec_dat
+
+
+loop_dat$N[1] <- 2
+
+for(i in 1:4) {
+  loop_dat$N[i + 1] <- loop_dat$N[i]*exp(0.5*(1 - loop_dat$N[i]/30))
+}
+
+loop_dat
+```
+
+## Let's do something a little more complex with a for loop.
+
+```{webR}
+# This is a stupid example, but it creates some data for us.
+for(i in 1:20) {
+  write.csv(data.frame(ID = paste0("DataLogger-", i),
+                    Temperature = runif(30, 10, 20),
+                    Wind = runif(30, 0, 15),
+                    Battery = "Normal"),
+            paste0(getwd(), "/WeatherStation_", i, ".csv"))
+  
+}
+
+# Now cheack our work.
+list.files(getwd(), pattern = "WeatherStation_")
+```
+
+-   There are also while and repeat loops, but you shouldn't be writing code in R if you are using them.
+
+## Now we will look at a couple of the apply functions.
+
+```{webR}
+# This is the code we just wrote.
+for(i in 1:20) {
+  write.csv(data.frame(ID = paste0("DataLogger-", i),
+                    Temperature = runif(30, 10, 20),
+                    Wind = runif(30, 0, 15),
+                    Battery = "Normal"),
+            paste0(getwd(), "/WeatherStation_", i, ".csv"))
+}
+
+# What if we want to read in a bunch of data files?
+df <- lapply(paste0(getwd(), "/",
+                    list.files(getwd(),
+                               pattern = "WeatherStation_")),
+             read.csv)
+
+head(df)
+
+df2 <- do.call(rbind, lapply(paste0(getwd(), "/",
+                                   list.files(getwd(),
+                                              pattern = "WeatherStation_")),
+                                   read.csv))
+
+head(df2)
+```
+
+## A different example.
+
+```{webR}
+# Create some genetic data.
+genetic_data <- data.frame(matrix(data = sample(c("A", "T", "G", "C"),
+                                                3000,
+                                                replace = TRUE),
+                                  nrow = 300,
+                                  ncol = 10))
+head(genetic_data)
+
+# I want to know how many A's there are in each column.
+apply(genetic_data, 2, table)[1,]
+```
+
+-   You might want to look at the "pbapply" package if you regularly parallelize your code.
+
+## Now we will look at logical statements.
+
+```{webR}
+if(TRUE) {
+  print("I have to work today.")
+}
+
+if(FALSE) {
+  print("I have to work today.")
+} else {
+  print("It is the weekend!")
+}
+
+if(FALSE) {
+  print("I have to work today.")
+} else if(TRUE) {
+  print("It is the weekend!")
+}
+
+
+x <- 10
+x == 10
+x != 10
+
+column1 <- c(1:10, NA)
+column1
+any(is.na(column1))
+is.numeric(column1)
+!is.numeric(column1)
+
+ifelse(TRUE, "cold", "hot")
+
+# Make some data.
+df2 <- data.frame(ID = paste0("DataLogger-", i),
+                    Temperature = runif(30, 10, 20),
+                    Wind = runif(30, 0, 15),
+                    Battery = "Normal")
+                    
+head(df2)
+df2$WindClass <- ifelse(df2$Wind >= 10, "Windy", "Still")
+head(df2)
+```
+
+## Exercises
+
+::: panel-tabset
+### Question
+
+Read in the 20 "Weather Station" data files with a for loop and combine into one dataframe.
+
+```{webr-r}
+# This is the code from before to make the data.
+for(i in 1:20) {
+  write.csv(data.frame(ID = paste0("DataLogger-", i),
+                    Temperature = runif(30, 10, 20),
+                    Wind = runif(30, 0, 15),
+                    Battery = "Normal"),
+            paste0(getwd(), "/WeatherStation_", i, ".csv"))
+}
+
+
+```
+
+### Answer
+
+```{webr-r}
+# This is the code from before to make the data.
+for(i in 1:20) {
+  write.csv(data.frame(ID = paste0("DataLogger-", i),
+                    Temperature = runif(30, 10, 20),
+                    Wind = runif(30, 0, 15),
+                    Battery = "Normal"),
+            paste0(getwd(), "/WeatherStation_", i, ".csv"))
+}
+
+for(i in seq_along(list.files(getwd(), pattern = "WeatherStation_"))) {
+  tmp <- read.csv(paste0(getwd(), "/",
+                         list.files(getwd(),
+                                    pattern = "WeatherStation_"))[i])
+  if(i == 1) {
+    weather_dat <- tmp
+  } else {
+    weather_dat <- rbind(weather_dat, tmp)
+  }
+}
+```
+:::
+
+::: panel-tabset
+### Question
+
+Now modify your for loop to omit any files that contain an NA.
+
+```{webr-r}
+# This is the code from before to make the data.
+for(i in 1:20) {
+  write.csv(data.frame(ID = paste0("DataLogger-", i),
+                    Temperature = runif(30, 10, 20),
+                    Wind = runif(30, 0, 15),
+                    Battery = "Normal"),
+            paste0(getwd(), "/WeatherStation_", i, ".csv"))
+}
+
+# Use this code to put some NA's into the "Weather Station" files.
+write.csv(data.frame(ID = "DataLogger-7",
+                     Temperature = c(runif(28, 10, 20), NA, NA),
+                     Wind = c(runif(28, 0, 15), NA, NA),
+                     Battery = c(rep("Normal", 28), "Low", "Low")),
+          paste0(getwd(), "/WeatherStation_7.csv"))
+
+
+
+```
+
+### Answer
+
+```{webr-r}
+# This is the code from before to make the data.
+for(i in 1:20) {
+  write.csv(data.frame(ID = paste0("DataLogger-", i),
+                    Temperature = runif(30, 10, 20),
+                    Wind = runif(30, 0, 15),
+                    Battery = "Normal"),
+            paste0(getwd(), "/WeatherStation_", i, ".csv"))
+}
+
+# Use this code to put some NA's into the "Weather Station" files.
+write.csv(data.frame(ID = "DataLogger-7",
+                     Temperature = c(runif(28, 10, 20), NA, NA),
+                     Wind = c(runif(28, 0, 15), NA, NA),
+                     Battery = c(rep("Normal", 28), "Low", "Low")),
+          paste0(getwd(), "/WeatherStation_7.csv"))
+
+
+for(i in seq_along(list.files(getwd(), pattern = "WeatherStation_"))) {
+  tmp <- read.csv(paste0(getwd(), "/",
+                         list.files(getwd(),
+                                    pattern = "WeatherStation_"))[i])
+  if(!any(is.na(tmp))) {
+  if(i == 1) {
+    weather_dat <- tmp
+  } else {
+    weather_dat <- rbind(weather_dat, tmp)
+  }}
+}
+```
+:::
+
+::: panel-tabset
+### Question
+
+Use an apply function to perform a Shapiro-Wilk test on each column of the data set created below (dat) to determine if the data in each column is normally distributed.
+
+```{webr-r}
+dat <- data.frame(A = rnorm(100, 10, 5),
+                  B = rpois(100, 10),
+                  C = rnorm(100, 50, 10),
+                  X = runif(100, 0, 100),
+                  Y = rbeta(100, 1, 2),
+                  Z = rnorm(100, 0, 1))
+
+
+```
+
+### Answer
+
+```{webr-r}
+dat <- data.frame(A = rnorm(100, 10, 5),
+                  B = rpois(100, 10),
+                  C = rnorm(100, 50, 10),
+                  X = runif(100, 0, 100),
+                  Y = rbeta(100, 1, 2),
+                  Z = rnorm(100, 0, 1))
+
+apply(dat, 2, shapiro.test)
+```
+:::
+
+::: panel-tabset
+### Question
+
+Make a column in the data created below (a subset of the weather station data) for week. If X (this is the row ID or day of the month) is 1-7 Week should be 1, days 8-14 = week 2, 15-21 = week 3, 22-28 = week 4, and days 28-30 should be assigned a value of NA.
+
+```{webr-r}
+# Make some data.
+df2 <- data.frame(ID = paste0("DataLogger-", i),
+                    Temperature = runif(30, 10, 20),
+                    Wind = runif(30, 0, 15),
+                    Battery = "Normal")
+
+
+```
+
+### Answer
+
+```{webr-r}
+# Make some data.
+df2 <- data.frame(ID = paste0("DataLogger-", i),
+                    Temperature = runif(30, 10, 20),
+                    Wind = runif(30, 0, 15),
+                    Battery = "Normal")
+
+df2$Week <- ifelse(df2$X <= 7,
+                   1,
+                   ifelse(df2$X >= 8 & df2$X <= 14,
+                          2,
+                          ifelse(df2$X >= 15 & df2$X <= 21,
+                                 3,
+                                 ifelse(df2$X >= 22 & df2$X <= 28,
+                                        4,
+                                        NA))))
+```
+:::
+
+# R function Basics
+
+## Function Structure
 
 > Like a grammitcally correct sentance, functions require a function name, argument and a returned object
 
@@ -122,9 +417,9 @@ m <- function(x){X = x^2; invisible(x+1); Y = x^3}
 paste(m(3))
 ```
 
-## `r fontawesome::fa("triangle-exclamation", "white")` Functions Should Return Output {.center  background-color="#447099"}
+# `r fontawesome::fa("triangle-exclamation", "white")` Functions Should Return Output {background-color="#447099"}
 
-# [R function's Extended]{style="color:white;"} {background-color="#8FA9C2"}
+# R function's Extended
 
 ## Function `formals()`, `body()` and `environment()`
 
@@ -251,8 +546,6 @@ sapply(1:2, function(x) x + 1)
 purrr::map_int(1:2, ~.x + 1)
 ```
 
-# [Functional Programming with `base` R]{style="color:white;"} {background-color="#8FA9C2"}
-
 ## Functional Programming with `base` R
 
 ::: {style="font-size: 0.45em;"}
@@ -291,7 +584,7 @@ sapply(Y, quantile)
 
 ### `lapply`
 
-```{webr-r}
+```{webr}
 (Y <- list(a = 1:10, beta = exp(-3:3)))
 
 lapply(Y, quantile)
@@ -361,8 +654,6 @@ Reduce(intersect,L)
 :::
 :::
 
-# [Functional programming with `purrr`]{style="color:white;"} {background-color="#8FA9C2"}
-
 ## Functional programming with `purrr`
 
 ::: {style="font-size: 0.65em;"}
@@ -415,9 +706,7 @@ purrr::reduce(L,intersect)
 ```
 :::
 
-# [Parallel Computing]{style="color:white;"} {background-color="#8FA9C2"}
-
-## Parallel Computing with `furrr`
+## Parrel Proccesing with `furrr`
 
 ```{r}
 #| echo: true
@@ -458,9 +747,9 @@ num <- 1:35 |> future_map(fib_n)
 toc() # 18.477 sec elapsed
 ```
 
-## A Note on Parallel Computing
+## A Note on Parallelism
 
-> Parallel Computing is not a magic bullet, ultimately performance depends on Overhead of Parallelization, Task Granularity, and Algorithm efficiency
+> Parallel processing is not a magic bullet, ultimately performance depends on Overhead of Parallelization, Task Granularity, and Algorithm efficiency
 
 ## Bootstraps in Parrelel
 
@@ -545,8 +834,7 @@ list_of_dfs <- lapply(1:3, function(i) {
 do.call(rbind,list_of_dfs)
 ```
 
-# `r fontawesome::fa("laptop-code", "white")` [Lets try Some exercises]{style="color:white;"} {background-color="#8FA9C2"}
-
+# `r fontawesome::fa("laptop-code", "white")` Lets try Some exercises {background-color="#447099"}
 
 ## Q1
 
@@ -668,7 +956,7 @@ halve_until_less_than_one <- function(x) {
 ::: panel-tabset
 ### Question
 
-Write a function named `scale_columns` that takes a matrix and scales (normalizes) each column to have a mean of 0 and a standard deviation of 1. 
+Write a function named `scale_columns` that takes a matrix and scales (normalizes) each column to have a mean of 0 and a standard deviation of 1.
 
 ```{webr-r}
 scale_columns <- function(mat) {
@@ -739,6 +1027,4 @@ multiply_and_add <- function(...) {
 ```
 :::
 
-
-# Thank you!! {.center background-color="#447099"}
-
+# Thank you!! {background-color="#447099"}
