@@ -65,8 +65,10 @@ filters:
 
 ## What is the difference between vectorization and iteration?
 
+::: incremental
 -   If y = 4x + 3, what is y for x = 4?
 -   If $N_{(t + 1)} = N_{t}e^{r(1 - \frac{N_{t}}{K})}$, what is *N* for *t* = 4 ($N_{1} = 2$, *r* = 0.5, and *K* = 30)?
+:::
 
 ## Now we will do the math in R.
 
@@ -115,23 +117,18 @@ list.files(getwd(), pattern = "WeatherStation_")
 # This is the code we just wrote.
 for(i in 1:20) {
   write.csv(data.frame(ID = paste0("DataLogger-", i),
-                    Temperature = runif(30, 10, 20),
-                    Wind = runif(30, 0, 15),
-                    Battery = "Normal"),
-            paste0(getwd(), "/WeatherStation_", i, ".csv"))
+                    Temperature = runif(30, 10, 20),Wind = runif(30, 0, 15),
+                    Battery = "Normal"),paste0(getwd(), "/WeatherStation_", i, ".csv"))
 }
 
 # What if we want to read in a bunch of data files?
-df <- lapply(paste0(getwd(), "/",
-                    list.files(getwd(),
-                               pattern = "WeatherStation_")),
+df <- lapply(paste0(getwd(), "/",list.files(getwd(),pattern = "WeatherStation_")),
              read.csv)
-head(df)
 
-df2 <- do.call(rbind, lapply(paste0(getwd(), "/",
-                                   list.files(getwd(),
-                                              pattern = "WeatherStation_")),
-                                   read.csv))
+lapply(df, function(x) head(x,3))[1:2] # first 2 of 20 #D? save on space
+
+df2 <- do.call(rbind, lapply(paste0(getwd(), "/",list.files(getwd(),
+                              pattern = "WeatherStation_")),read.csv))
 head(df2)
 ```
 
@@ -155,9 +152,7 @@ apply(genetic_data, 2, table)[1,]
 ## Now we will look at logical statements (1).
 
 ```{webr-r}
-if(TRUE) {
-  print("I have to work today.")
-}
+if(TRUE) {print("I have to work today.")} # save on space
 
 if(FALSE) {
   print("I have to work today.")
@@ -170,7 +165,6 @@ if(FALSE) {
 } else if(TRUE) {
   print("It is the weekend!")
 }
-
 
 x <- 10
 x == 10
@@ -189,7 +183,7 @@ is.numeric(column1)
 ifelse(TRUE, "cold", "hot")
 
 # Make some data.
-df2 <- data.frame(ID = paste0("DataLogger-", i),
+df2 <- data.frame(ID = paste0("DataLogger-", 20), #D? repalce `i` with 20
                     Temperature = runif(30, 10, 20),
                     Wind = runif(30, 0, 15),
                     Battery = "Normal")
@@ -370,6 +364,14 @@ df2$Week <- ifelse(df2$X <= 7,
                                         NA))))
 ```
 :::
+
+```{r}
+#| echo: false
+#| eval: true
+#| results: 'hide'
+
+file.remove(list.files(getwd(), pattern = "WeatherStation_"))
+```
 
 # [R function Basics]{style="color:white;"} {background-color="#8FA9C2"}
 
