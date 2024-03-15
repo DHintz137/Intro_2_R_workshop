@@ -5,9 +5,9 @@ author:
   - "Daniel Hintz"
   - "Seth Rankins"
 institute: 
-  - "University Of Wyoming <br>Statistics"
+  - "University Of Wyoming <br>Mathematics and Statistics"
   - "University Of Wyoming <br>The Haub School"
-date: today
+date: 2024-03-25
 engine: knitr
 webr: 
   show-startup-message: false  
