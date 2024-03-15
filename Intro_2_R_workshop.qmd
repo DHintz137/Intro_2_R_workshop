@@ -856,7 +856,7 @@ do.call(rbind,list_of_dfs)
 
 # `r fontawesome::fa("laptop-code", "white")` [Its time for some more exercises]{style="color:white;"} {background-color="#8FA9C2"}
 
-## Q1
+## Q3
 
 ::: panel-tabset
 ### Question
@@ -886,7 +886,7 @@ is_positive(5)
 ```
 :::
 
-## Q2
+## Q4
 
 <!--Error Handling with Stop-->
 
@@ -915,7 +915,7 @@ sqrt_safe(5)
 ```
 :::
 
-## Q3
+## Q5
 
 <!--Loop with Break-->
 
@@ -946,7 +946,7 @@ find_first_negative(c(5, 2, -4, 6, -1))
 ```
 :::
 
-## Q4
+## Q6
 
 <!--While Loop-->
 
@@ -976,7 +976,7 @@ halve_until_less_than_one(14)
 ```
 :::
 
-## Q5
+## Q7
 
 <!--Apply Function-->
 
@@ -1014,7 +1014,7 @@ hist(M$x);hist(M_new)
 ```
 :::
 
-## Q6
+## Q8
 
 <!--`map` with purr-->
 
@@ -1048,7 +1048,7 @@ calc_means(K)
 ```
 :::
 
-## Q7
+## Q9
 
 <!--Using the Ellipsis (...)-->
 
