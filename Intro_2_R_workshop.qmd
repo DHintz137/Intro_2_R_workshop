@@ -63,7 +63,7 @@ filters:
 :::
 :::
 
-# Loops, Functionals, and Logicals
+# [Loops, Functionals, and Logicals]{style="color:white;"} {background-color="#8FA9C2"}
 
 ## What is the difference between vectorization and iteration?
 
@@ -72,12 +72,11 @@ filters:
 
 ## Now we will do the math in R.
 
-```{webR}
+```{webr-r}
 # First let's make some data to play with.
 vec_dat <- data.frame(x = 1:5,
                       y = NA_real_)
 vec_dat
-
 loop_dat <- data.frame(t = 1:5,
                        N = NA_real_)
 loop_dat
@@ -87,19 +86,16 @@ loop_dat
 vec_dat$y <- 4*vec_dat$x + 3
 vec_dat
 
-
 loop_dat$N[1] <- 2
-
 for(i in 1:4) {
   loop_dat$N[i + 1] <- loop_dat$N[i]*exp(0.5*(1 - loop_dat$N[i]/30))
 }
-
 loop_dat
 ```
 
 ## Let's do something a little more complex with a for loop.
 
-```{webR}
+```{webr-r}
 # This is a stupid example, but it creates some data for us.
 for(i in 1:20) {
   write.csv(data.frame(ID = paste0("DataLogger-", i),
@@ -107,7 +103,6 @@ for(i in 1:20) {
                     Wind = runif(30, 0, 15),
                     Battery = "Normal"),
             paste0(getwd(), "/WeatherStation_", i, ".csv"))
-  
 }
 
 # Now cheack our work.
@@ -116,9 +111,9 @@ list.files(getwd(), pattern = "WeatherStation_")
 
 -   There are also while and repeat loops, but you shouldn't be writing code in R if you are using them.
 
-## Now we will look at a couple of the apply functions.
+## Now for Apply functions.
 
-```{webR}
+```{webr-r}
 # This is the code we just wrote.
 for(i in 1:20) {
   write.csv(data.frame(ID = paste0("DataLogger-", i),
@@ -133,20 +128,18 @@ df <- lapply(paste0(getwd(), "/",
                     list.files(getwd(),
                                pattern = "WeatherStation_")),
              read.csv)
-
 head(df)
 
 df2 <- do.call(rbind, lapply(paste0(getwd(), "/",
                                    list.files(getwd(),
                                               pattern = "WeatherStation_")),
                                    read.csv))
-
 head(df2)
 ```
 
 ## A different example.
 
-```{webR}
+```{webr-r}
 # Create some genetic data.
 genetic_data <- data.frame(matrix(data = sample(c("A", "T", "G", "C"),
                                                 3000,
@@ -161,9 +154,9 @@ apply(genetic_data, 2, table)[1,]
 
 -   You might want to look at the "pbapply" package if you regularly parallelize your code.
 
-## Now we will look at logical statements.
+## Now we will look at logical statements (1).
 
-```{webR}
+```{webr-r}
 if(TRUE) {
   print("I have to work today.")
 }
@@ -184,7 +177,11 @@ if(FALSE) {
 x <- 10
 x == 10
 x != 10
+```
 
+## Now we will look at logical statements (2).
+
+```{webr-r}
 column1 <- c(1:10, NA)
 column1
 any(is.na(column1))
@@ -204,7 +201,9 @@ df2$WindClass <- ifelse(df2$Wind >= 10, "Windy", "Still")
 head(df2)
 ```
 
-## Exercises
+# `r fontawesome::fa("laptop-code", "white")` [Lets try some exercises]{style="color:white;"} {background-color="#8FA9C2"}
+
+## Q1
 
 ::: panel-tabset
 ### Question
@@ -220,8 +219,6 @@ for(i in 1:20) {
                     Battery = "Normal"),
             paste0(getwd(), "/WeatherStation_", i, ".csv"))
 }
-
-
 ```
 
 ### Answer
@@ -249,6 +246,7 @@ for(i in seq_along(list.files(getwd(), pattern = "WeatherStation_"))) {
 ```
 :::
 
+## Q2
 ::: panel-tabset
 ### Question
 
@@ -843,7 +841,7 @@ tic()
 toc() # 8.014 sec elapsed
 ```
 
-```{webr}
+```{webr-r}
 set.seed(1)
 list_of_dfs <- lapply(1:3, function(i) {
   data.frame(A = sample(1:100, 5), B = sample(1:100, 5))
@@ -851,7 +849,7 @@ list_of_dfs <- lapply(1:3, function(i) {
 do.call(rbind,list_of_dfs)
 ```
 
-# `r fontawesome::fa("laptop-code", "white")` [Lets try Some exercises]{style="color:white;"} {background-color="#8FA9C2"}
+# `r fontawesome::fa("laptop-code", "white")` [Its time for some more exercises]{style="color:white;"} {background-color="#8FA9C2"}
 
 ## Q1
 
