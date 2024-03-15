@@ -14,6 +14,10 @@ webr:
   packages: ['ggplot2', 'dplyr', 'purrr', 'tictoc']
 format:
   revealjs:
+    include-in-header:
+      - text: |
+          <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+          <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     theme: default
     scrollable: true
     css: styles.css
@@ -23,11 +27,6 @@ format:
 filters: 
  - webr
 ---
-
-<!--in order for chrome to load MathJax-->
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
 
 ## Outline (1)
 
