@@ -4,11 +4,9 @@ subtitle: "A R-Ladies Workshop"
 author:
   - "Daniel Hintz"
   - "Seth Rankins"
-  - "Molly Caldwell"
 institute: 
   - "University Of Wyoming <br>Statisitcs"
   - "University Of Wyoming <br>The Haub School"
-  - "University Of Wyoming <br>Zoology & Physiology"
 date: today
 engine: knitr
 webr: 
