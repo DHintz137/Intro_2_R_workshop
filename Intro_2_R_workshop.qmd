@@ -68,14 +68,14 @@ filters:
 
 # [Loops, Functionals, and Logicals]{style="color:white;"} {background-color="#8FA9C2"}
 
-## What is the difference between vectorization and iteration?
+## What is the Difference Between Vectorization and Iteration?
 
 ::: incremental
 -   If y = 4x + 3, what is y for x = 4?
--   If $N_{(t + 1)} = N_{t}e^{r(1 - \frac{N_{t}}{K})}$, what is *N* for *t* = 4 ($N_{1} = 2$, *r* = 0.5, and *K* = 30)?
+-   If $N_{(t + 1)} = N_{t}e^{r\left(1 ~-~ \frac{N_{t}}{K}\right)}$, what is $N$ for $t = 4$ $~~$($N_{1} = 2$, $r = 0.5$, and $K = 30$)?
 :::
 
-## Now we will do the math in R.
+## Now for the Math in R
 
 ```{webr-r}
 # First let's make some data to play with.
@@ -98,7 +98,7 @@ for(i in 1:4) {
 loop_dat
 ```
 
-## Let's do something a little more complex with a for loop.
+## Let's do Something a Little More Complex with a `for` Loop
 
 ```{webr-r}
 # This is a stupid example, but it creates some data for us.
@@ -114,9 +114,11 @@ for(i in 1:20) {
 list.files(getwd(), pattern = "WeatherStation_")
 ```
 
+. . .
+
 -   There are also while and repeat loops, but you shouldn't be writing code in R if you are using them.
 
-## Now for Apply functions.
+## Now for Apply Functions
 
 ```{webr-r}
 # This is the code we just wrote.
@@ -137,7 +139,7 @@ df2 <- do.call(rbind, lapply(paste0(getwd(), "/",list.files(getwd(),
 head(df2)
 ```
 
-## A different example.
+## Apply Functions (cont'd)
 
 ```{webr-r}
 # Create some genetic data.
@@ -152,9 +154,11 @@ head(genetic_data)
 apply(genetic_data, 2, table)[1,]
 ```
 
--   You might want to look at the "pbapply" package if you regularly parallelize your code.
+. . .
 
-## Now we will look at logical statements (1).
+-   You might want to look at the `pbapply` package if you regularly parallelize your code.
+
+## Logical Statements (1)
 
 ```{webr-r}
 if(TRUE) {print("I have to work today.")} # save on space
@@ -176,7 +180,7 @@ x == 10
 x != 10
 ```
 
-## Now we will look at logical statements (2).
+## Logical Statements (2)
 
 ```{webr-r}
 column1 <- c(1:10, NA)
@@ -198,7 +202,7 @@ df2$WindClass <- ifelse(df2$Wind >= 10, "Windy", "Still")
 head(df2)
 ```
 
-# `r fontawesome::fa("laptop-code", "white")` [Lets try some exercises]{style="color:white;"} {background-color="#8FA9C2"}
+# `r fontawesome::fa("laptop-code", "white")` [Lets Try Some Exercises]{style="color:white;"} {background-color="#8FA9C2"}
 
 ## Q1
 
@@ -378,7 +382,7 @@ df2$Week <- ifelse(df2$X <= 7,
 file.remove(list.files(getwd(), pattern = "WeatherStation_"))
 ```
 
-# [R function Basics]{style="color:white;"} {background-color="#8FA9C2"}
+# [R Function Basics]{style="color:white;"} {background-color="#8FA9C2"}
 
 ## Function Structure
 
@@ -388,7 +392,7 @@ file.remove(list.files(getwd(), pattern = "WeatherStation_"))
 
 ![](images/function-structure.png){height="300px"}
 
-## Lets Write some Functions
+## Lets Write Some Functions
 
 ```{webr-r}
 i <- function(x) print(x^2) # same as `i <- function(x) x^2`
@@ -432,7 +436,7 @@ paste(m(3))
 
 ## `r fontawesome::fa("triangle-exclamation", "white")` Functions Should Return Output {.center background-color="#447099"}
 
-# [R function's Extended]{style="color:white;"} {background-color="#8FA9C2"}
+# [R Function's Extended]{style="color:white;"} {background-color="#8FA9C2"}
 
 ## Function `formals()`, `body()` and `environment()`
 
@@ -671,9 +675,9 @@ Reduce(intersect,L)
 :::
 :::
 
-# [Functional programming with `purrr`]{style="color:white;"} {background-color="#8FA9C2"}
+# [Functional Programming with `purrr`]{style="color:white;"} {background-color="#8FA9C2"}
 
-## Functional programming with `purrr`
+## Functional Programming with `purrr`
 
 ::: {style="font-size: 0.65em;"}
 | Function                                 | Description                                                                                                                         |
@@ -856,7 +860,7 @@ list_of_dfs <- lapply(1:3, function(i) {
 do.call(rbind,list_of_dfs)
 ```
 
-# `r fontawesome::fa("laptop-code", "white")` [Its time for some more exercises]{style="color:white;"} {background-color="#8FA9C2"}
+# `r fontawesome::fa("laptop-code", "white")` [Its Time for Some More Exercises]{style="color:white;"} {background-color="#8FA9C2"}
 
 ## Q3
 
@@ -865,7 +869,7 @@ do.call(rbind,list_of_dfs)
 
 <!--Basic If-Else-->
 
-Write an R function named `is_positive` that takes a single numeric input and returns TRUE if the number is positive, and FALSE otherwise.
+Write an R function named `is_positive` that takes a single numeric input and returns `TRUE` if the number is positive, and `FALSE` otherwise.
 
 ```{webr-r}
 is_positive <- function(x) {
@@ -895,7 +899,7 @@ is_positive(5)
 ::: panel-tabset
 ### Question
 
-Create a function named `sqrt_safe` that computes the square root of a number. If the input is negative, the function should stop execution and return an error message "Cannot take square root of a negative number."
+Create a function named `sqrt_safe` that computes the square root of a number. If the input is negative, the function should stop execution and return an error message `"Cannot take square root of a negative number."`
 
 ```{webr-r}
 sqrt_safe <- function(x) {
@@ -955,7 +959,7 @@ find_first_negative(c(5, 2, -4, 6, -1))
 ::: panel-tabset
 ### Question
 
-Create a function named halve_until_less_than_one that takes a single numeric argument and keeps halving it until it is less than 1, then returns the result. Keep track of the number of times the input is halved; print the function output as `list(result = x, nsteps = count)`
+Create a function named `halve_until_less_than_one` that takes a single numeric argument and keeps halving it until it is less than 1, then returns the result. Keep track of the number of times the input is halved; print the function output as `list(result = x, nsteps = count)`
 
 ```{webr-r}
 halve_until_less_than_one <- function(x) {
@@ -1057,7 +1061,7 @@ calc_means(K)
 ::: panel-tabset
 ### Question
 
-Create a function named multiply_and_add that takes an arbitrary number of numeric vectors. It should multiply each vector by its index in the argument list and then sum all the results into a single number.
+Create a function named `multiply_and_add` that takes an arbitrary number of numeric vectors. It should multiply each vector by its index in the argument list and then sum all the results into a single number.
 
 ```{webr-r}
 multiply_and_add <- function(...) {
