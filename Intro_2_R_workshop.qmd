@@ -5,7 +5,7 @@ author:
   - "Daniel Hintz"
   - "Seth Rankins"
 institute: 
-  - "University Of Wyoming <br>Statisitcs"
+  - "University Of Wyoming <br>Statistics"
   - "University Of Wyoming <br>The Haub School"
 date: today
 engine: knitr
@@ -36,11 +36,11 @@ filters:
 -   Logicals
 -   R function Basics
     -   Structure
-    -   Some practise to start
+    -   Some practice to start
 -   R function's Extended
     -   `formals()`, `body()`, and `environment()`
     -   More on Enviroments
-    -   Defualt Argument Assignment
+    -   Default Argument Assignment
     -   `NULL` Conditional Execution
     -   `message()`, `warning()`, and `stop()`
     -   Conditional Execution with `missing()`
@@ -110,7 +110,7 @@ for(i in 1:20) {
             paste0(getwd(), "/WeatherStation_", i, ".csv"))
 }
 
-# Now cheack our work.
+# Now lets check our work.
 list.files(getwd(), pattern = "WeatherStation_")
 ```
 
@@ -382,7 +382,7 @@ file.remove(list.files(getwd(), pattern = "WeatherStation_"))
 
 ## Function Structure
 
-> Like a grammitcally correct sentance, functions require a function name, argument and a returned object
+> Like a grammatically correct sentance, functions require a function name, argument and a returned object
 
 . . .
 
@@ -452,7 +452,7 @@ k() # k() has its own environment
 list(ls()[1:5],environment())
 ```
 
-## Defualt Argument Assignment
+## Default Argument Assignment
 
 ```{webr-r}
 f <- function(a = 1) a
@@ -470,11 +470,13 @@ f(1,2)
 ## `message()`, `warning()`, and `stop()`
 
 ```{webr-r}
-message("notify the user, though we are not indacting any problems")
+message("notify the user, although we are not indicating any problems")
 
 warning("notify the user of something potentially problematic")
 
-stop("A condition has been meet that is enough of ploblem that we want to force an error")
+stop("A condition has been met that is problematic enough to warrant forcing an error.")
+
+
 ```
 
 ## `NULL` Conditional Execution (2)
@@ -489,7 +491,7 @@ f <- function(a, b = NULL) {
   if(a < 0 && b == 1/2){
     stop("{stop()} can't take the sqrt of a negative number")
   } else {
-    message("{message()} function completion without condiational execution")
+    message("{message()} function completion without conditional execution")
     a^(b)
   }
 }
@@ -530,7 +532,7 @@ set.seed(1); random_num_gen(5, mean = 3, sd = 1.5)
 ## Anonymous Functions
 
 ::: {style="font-size: 0.7em;"}
-> "An Anonymous Function (also known as a lambda experssion) is a function definition that is not bound to an identifier. That is, it is a function that is created and used, but never assigned to a variable" (see [link](https://coolbutuseless.github.io/2019/03/13/anonymous-functions-in-r-part-1/))
+> "An Anonymous Function (also known as a lambda expression) is a function definition that is not bound to an identifier. That is, it is a function that is created and used, but never assigned to a variable" (see [link](https://coolbutuseless.github.io/2019/03/13/anonymous-functions-in-r-part-1/))
 :::
 
 . . .
@@ -771,7 +773,7 @@ toc() # 18.477 sec elapsed
 
 > Parallel Computing is not a magic bullet, ultimately performance depends on Overhead of Parallelization, Task Granularity, and Algorithm efficiency
 
-## Bootstraps in Parrelel
+## Bootstraps in Parallel
 
 ```{r}
 #| eval: false
