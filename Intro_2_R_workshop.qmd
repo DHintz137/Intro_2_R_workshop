@@ -123,7 +123,7 @@ for(i in 1:20) {write.csv(data.frame(ID = paste0("DataLogger-", i),
 # What if we want to read in a bunch of data files?
 df <- lapply(paste0(getwd(), "/", list.files(getwd(), pattern = ".csv")), read.csv)
 
-lapply(df, function(x) head(x,3))[1:2] # first 2 of 20 #D? save on space
+lapply(df, function(x) head(x,3))[1:2]
 
 df2 <- do.call(rbind, lapply(paste0(getwd(), "/",
                              list.files(getwd(), pattern = ".csv")), read.csv))
