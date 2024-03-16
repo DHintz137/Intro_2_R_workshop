@@ -36,7 +36,7 @@ filters:
     -   Some practice to start
 -   R function's Extended
     -   `formals()`, `body()`, and `environment()`
-    -   More on Enviroments
+    -   More on Environments
     -   Default Argument Assignment
     -   `NULL` Conditional Execution
     -   `message()`, `warning()`, and `stop()`
@@ -317,7 +317,7 @@ file.remove(list.files(getwd(), pattern = "WeatherStation_"))
 
 ## Function Structure
 
-> Like a grammatically correct sentance, functions require a function name, argument and a returned object
+> Like a grammatically correct sentence, functions require a function name, argument and a returned object
 
 . . .
 
@@ -379,7 +379,7 @@ body(f) #> x^2
 environment(f) # <environment: R_GlobalEnv>
 ```
 
-## More on Enviroments
+## More on Environments
 
 ```{webr-r}
 k <- function() list(ls(),environment())
