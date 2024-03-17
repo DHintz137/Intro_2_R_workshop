@@ -365,7 +365,7 @@ m <- function(x){X = x^2; invisible(x+1); Y = x^3}
 paste(m(3))
 ```
 
-## `r fontawesome::fa("triangle-exclamation", "white")` Functions Should Return Output {.center background-color="#447099"}
+## `r fontawesome::fa("triangle-exclamation", "white")` Functions need a object call, for example, `x` or a `return(x)` in order to return output from `x` to outside the function {.center background-color="#447099"}
 
 # [R Function's Extended]{style="color:white;"} {background-color="#8FA9C2"}
 
