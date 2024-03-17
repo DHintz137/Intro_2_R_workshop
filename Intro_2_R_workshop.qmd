@@ -326,7 +326,7 @@ file.remove(list.files(getwd(), pattern = "WeatherStation_"))
 ## Lets Write Some Functions
 
 ```{webr-r}
-i <- function(x) print(x^2) # same as `i <- function(x) x^2`
+i <- function(x) x^2 # same as `i <- function(x) print(x^2)`
 i(3)
 j <- function(x) return(x^2)
 j(3)
