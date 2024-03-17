@@ -11,12 +11,12 @@ date: 2024-03-25
 engine: knitr
 webr: 
   show-startup-message: false  
-  packages: ['ggplot2', 'dplyr', 'purrr', 'tictoc']
+  packages: ['ggplot2', 'dplyr', 'purrr', 'tictoc','knitr']
 format:
   revealjs:
     include-in-header:
       - file: MathJax.html
-    theme: default
+    theme: [default, theme.scss]
     scrollable: true
     css: styles.css
     transition: slide
@@ -25,6 +25,7 @@ format:
 filters: 
  - webr
 ---
+
 
 ## Outline (1)
 
@@ -684,10 +685,14 @@ fib_n <- function(n) {
 ```{r}
 #| echo: true
 #| eval: false
-plan(multisession, workers = 1)
+#| code-line-numbers: "1-2|4|5-7|1-7"
+library(furrr) # library(furrr) loads future by default
+library(tictoc)
+
+future::plan(multisession, workers = 1) # setting num of cores/workers
 tic()
-num <- 1:35 |> future_map(fib_n)
-toc() # 20.321 sec elapsed
+num <- 1:30 |> future_map(fib_n)
+toc() # 4.151 sec elapsed
 ```
 
 . . .
@@ -698,15 +703,80 @@ toc() # 20.321 sec elapsed
 ```{r}
 #| echo: true
 #| eval: false
-plan(multisession, workers = 9)
+#| code-line-numbers: "1|2-4|1-4"
+future::plan(multisession, workers = 2) # Using 1 additional core
 tic()
-num <- 1:35 |> future_map(fib_n)
-toc() # 18.477 sec elapsed
+num <- 1:30 |> future_map(fib_n)
+toc() # 2.174 sec elapsed
 ```
 
 ## A Note on Parallel Computing
 
-> Parallel Computing is not a magic bullet, ultimately performance depends on Overhead of Parallelization, Task Granularity, and Algorithm efficiency
+> Parallel Computing is not a magic bullet. Performance depends on Overhead of Parallelization, Task Granularity, and whether or not the task is sequential
+
+. . .
+
+::: incremental
+- Sequential Tasks, generally speaking, are not capable of being parallized, though they can be *"functionally parallized"*; meaning given a function, `seq_func`, the internals of 
+`seq_func` **cannot** not be parallized, but the call to `seq_func` **can** be parallized. 
+- We will illustrate this concept with Random Walks
+:::
+
+## Random Walks 
+
+```{r}
+#| eval: false
+#| echo: true
+#| code-fold: true
+#| code-summary: "expand for `random_walk()` source code"
+#| code-line-numbers: "4|5-16|6|7|8-14|8|9-10|11-13|5-16"
+library(furrr)
+library(tictoc)
+
+nworkers = parallel::detectCores() - 1 # select nworkers to amount of cores - 1 
+random_walk <- function(steps) {
+  position <- numeric(steps) # Initialize the position vector
+  position[1] <- 0 # Start at the origin
+  for (i in 2:steps) {                   # Simulate each step of the walk
+    if (runif(1) < 0.5) {
+      position[i] <- position[i - 1] + 1 # Move forward
+    } else {
+      position[i] <- position[i - 1] - 1 # Move backward
+    }
+  }
+  return(position)
+}
+```
+
+
+```{r}
+#| eval: false
+#| echo: true
+#| code-line-numbers: "1|3-6|7-11|13-18"
+steps = 10000; n_random_walks = 300 # Define the number of steps and walks
+
+future::plan(multisession, workers = 1) # setting num of cores/workers
+tic() # Measure time taken to execute the random walk
+set.seed(1); walks = future_map(1:n_random_walks , ~random_walk(steps),.options = furrr_options(seed = TRUE)) 
+toc() # 3.088 sec elapsed
+
+tic()
+future::plan(multisession, workers = nworkers) # setting num of cores/workers
+set.seed(1);walks = future_map(1:n_random_walks , ~random_walk(steps),.options = furrr_options(seed = TRUE)) 
+toc() # 1.713 sec elapsed
+
+pdf("random_walks.pdf")
+invisible(
+  lapply(1:10, function(i) 
+    plot(walks[[i]],type = "l", ylab = "Position", xlab = "Step",
+         main = paste("Random Walk",i)))
+  );dev.off()
+```
+
+## Our First 10 Random Walks Plots
+
+{{< pdf random_walks.pdf width=1000 height=650 >}}
+
 
 ## Bootstraps in Parallel
 
@@ -714,7 +784,7 @@ toc() # 18.477 sec elapsed
 #| eval: false
 #| echo: true
 #| code-fold: true
-#| code-summary: "expand for source code"
+#| code-summary: "expand for source code for `boot()` and `samp.o()`"
 
 boot <- function(x, B = 5000, m, theta.f, w = 1, rdist, ...) {
   plan(multisession, workers = w) # Set up for parallel execution
@@ -743,10 +813,12 @@ samp.o = function(t.s) {
 ```{r}
 #| eval: false
 #| echo: true
+library(purrr)
+library(future)
+library(tictoc)
 
-pacman::p_load(purrr, future, tictoc)
-boot <- function(x, B = 5000, m, theta.f, w = 1, rdist, ...) {} # see above
-samp.o = function(t.s) {} # see above
+# boot <- function(x, B = 5000, m, theta.f, w = 1, rdist, ...) {} # see above
+# samp.o = function(t.s) {} # see above
 theta.f = function(d.b) {p = sum(d.b)/n; p/(1-p)} 
 
 set.seed(1); n = 800000; y = 480; B = 5000
@@ -783,13 +855,6 @@ tic()
 toc() # 8.014 sec elapsed
 ```
 
-```{webr-r}
-set.seed(1)
-list_of_dfs <- lapply(1:3, function(i) {
-  data.frame(A = sample(1:100, 5), B = sample(1:100, 5))
-})
-do.call(rbind,list_of_dfs)
-```
 
 # `r fontawesome::fa("laptop-code", "white")` [Its Time for Some More Exercises]{style="color:white;"} {background-color="#8FA9C2"}
 
@@ -1015,6 +1080,38 @@ multiply_and_add(c(1,2),c(3,4))
 # ie 
 sum(c(1, 2) * 1) + sum(c(3, 4) * 2)  
 ```
+:::
+
+
+## [Wanna Hear From Us?]{style="color:white;"} {background-color="#447099"}
+
+::: columns
+::: {.column width="50%"}
+<p align="center">
+  <img src="images/Dan.png" alt="Cover Image" height="250px">
+</p>
+
+`r fontawesome::fa("linkedin", "black")` <a href="https://www.linkedin.com/in/daniel-hintz-rstat/" class="custom-link">daniel-hintz</a>
+
+`r fontawesome::fa("github", "black")` <a href="https://github.com/DHintz137" class="custom-link">DHintz137</a>
+
+`r fontawesome::fa("globe", "black")` <a href="https://dhintz137.github.io/quartz/" class="custom-link">dhintz137.github.io</a>
+
+`r fontawesome::fa("envelope", "black")` <a href="dhintz1@uwyo.edu" class="custom-link">dhintz1@uwyo.edu</a>
+:::
+::: {.column width="50%"}
+<p align="center">
+  <img src="images/Seth.png" alt="Cover Image" height="250px">
+</p>
+
+`r fontawesome::fa("linkedin", "black")` <a href="" class="custom-link">seth-rankins</a>
+
+`r fontawesome::fa("github", "black")` <a href="https://github.com/STRankins" class="custom-link">STRankins</a>
+
+`r fontawesome::fa("globe", "black")` <a href="https://wyocoopunit.org/people/seth-rankins/" class="custom-link">wyocoopunit.org</a>
+
+`r fontawesome::fa("envelope", "black")` <a href="srankins@uwyo.edu" class="custom-link">srankins@uwyo.edu</a>
+:::
 :::
 
 # Thank you!! {.center background-color="#447099"}

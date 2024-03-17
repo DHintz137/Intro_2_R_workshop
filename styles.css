@@ -3,9 +3,19 @@ ie in R use the following chunk options
 #| class-source: wide_chunck 
 #| classes: wide_chunck 
 */
-
+/*
 .wide_chunck {
 height: 500px;
-width: 1300px;
+width: 900px;
+}
+*/
+
+.custom-link {
+    color: #B79351 !important; /*  color for the link text */
+    text-decoration: none; /* Optional: removes underline from links */
 }
 
+.custom-link:hover {
+    color: #7B68EE; /* Medium Slate Blue color for hover state */
+    text-decoration: underline; /* Optional: underline on hover */
+}
