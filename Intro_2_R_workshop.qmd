@@ -1,13 +1,4 @@
 ---
-title: "An Advanced Introduction to R"
-subtitle: "A R-Ladies Workshop"
-author:
-  - "Daniel Hintz"
-  - "Seth Rankins"
-institute: 
-  - "University Of Wyoming <br>Mathematics and Statistics"
-  - "University Of Wyoming <br>The Haub School"
-date: 2024-03-25
 engine: knitr
 webr: 
   show-startup-message: false  
@@ -22,16 +13,40 @@ format:
     transition: slide
     highlight-style: github
     slide-number: c/t
+    chalkboard: true
 filters: 
  - webr
 ---
 
 
+# [An Advanced Introduction to R]{
+  style="color:#FFFFFF; 
+         font-size: 110px; 
+         text-shadow: -0.5px -0.5px 0 #000, 
+                      0.5px -0.5px 0 #000, 
+                      -0.5px 0.5px 0 #000, 
+                      0.5px 0.5px 0 #000;"
+}{background-image="images/conny-schneider-xuTJZ7uD7PI-unsplash.jpg" background-size="cover" background-color="#4f6952"}
 
-## Outline (1)
+
+<h2 style="color:#FFFFFF; 
+         font-size: 35px; 
+         text-shadow: -1px -1px 0 #000, 
+                      1px -1px 0 #000, 
+                      -1px 1px 0 #000, 
+                      1px 1px 0 #000;">Daniel Hintz | Seth Rankins | 2024-03-25</h2>
+
+<h3 style="color:#FFFFFF; 
+         font-size: 25px; 
+         text-shadow: -1px -1px 0 #000, 
+                      1px -1px 0 #000, 
+                      -1px 1px 0 #000, 
+                      1px 1px 0 #000;">A R Ladies Workshop</h3>
+
+# [Outline (1)]{style="font-size: 55px;"} 
 
 ::: incremental
-::: {style="font-size: 0.65em;"}
+::: {style="font-size: 0.6em;"}
 -   Loops, Functionals (to replace loops), and Logicals
 -   R function Basics
     -   Structure
@@ -48,10 +63,10 @@ filters:
 :::
 :::
 
-## Outline (2)
+## [Outline (2)]{style="font-size: 55px;"} 
 
 ::: incremental
-::: {style="font-size: 0.65em;"}
+::: {style="font-size: 0.6em;"}
 -   Functional Programming with `base` R
     -   Function Look Table
     -   Examples
@@ -104,7 +119,7 @@ for(i in 1:4) {
 loop_dat
 ```
 
-## Let's do Something a Little More Complex with a `for` Loop
+## Now onto a More Complex `for` Loop 
 
 ```{webr-r}
 # This is a stupid example, but it creates some data for us.
@@ -120,9 +135,14 @@ for(i in 1:20) {
 list.files(getwd(), pattern = "WeatherStation_")
 ```
 
-. . .
-
+<!--
 -   There are also while and repeat loops, but you shouldn't be writing code in R if you are using them.
+-->
+
+
+
+- While loops are a good skill to know for people that write their own algorithms ^[Their usage, however, can be more niche as they are used when the number of iterations is not known a priori and reach completion via convergence criterion such as the max number of iterations or some metric like Euclidean Distance] 
+
 
 ## Now for Apply Functions
 
@@ -1094,7 +1114,7 @@ sum(c(1, 2) * 1) + sum(c(3, 4) * 2)
 :::
 
 
-## [Wanna Hear From Us?]{style="color:white;"} {background-color="#447099"}
+# [Wanna Hear From Us?]{style="color:white; font-size: 70px;"} {background-color="#447099"}
 
 ::: columns
 ::: {.column width="50%"}
@@ -1114,8 +1134,6 @@ sum(c(1, 2) * 1) + sum(c(3, 4) * 2)
 <p align="center">
   <img src="images/Seth.png" alt="Cover Image" height="250px">
 </p>
-
-`r fontawesome::fa("linkedin", "black")` <a href="" class="custom-link">seth-rankins</a>
 
 `r fontawesome::fa("github", "black")` <a href="https://github.com/STRankins" class="custom-link">STRankins</a>
 
