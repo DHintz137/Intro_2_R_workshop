@@ -80,7 +80,7 @@ filters:
 :::
 :::
 
-## Webr Code Exectuion
+## Webr Code Execution
 
 ![](images/webr.gif){fig-align="center"}
 
@@ -494,6 +494,22 @@ random_num_gen <- function(x, ...) {
 
 set.seed(1); random_num_gen(5)
 set.seed(1); random_num_gen(5, mean = 3, sd = 1.5)
+
+formals(median) |> names() # defined with "..."
+formals(mean) |> names()   # defined with "..."
+formals(matrix) |> names() # NOT defined with "..."
+
+f1 <- function(x, ...){
+  out <- list(mean(x, ...), median(x, ...))
+  out
+}
+f1(x=c(1:8,NA), na.rm = TRUE)
+f1(x=c(1:8,NA), random_message = "Save the bees")
+f2 <- function(x, ...){
+  out <- list(mean(x, ...), median(x, ...), matrix(x,...))
+  out
+}
+f2(x=c(1:8,NA), na.rm = TRUE)
 ```
 
 ## Anonymous Functions
