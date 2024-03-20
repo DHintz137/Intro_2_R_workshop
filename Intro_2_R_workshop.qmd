@@ -90,7 +90,7 @@ filters:
 - As of `webR 0.2.3`, `webr` does not support smart execution, so for multiline code highlight the entire section before hitting `cmd` `+` `enter`
 :::
 
-# [Loops, Functionals, and Logicals]{style="color:white;"} {background-color="#8FA9C2"}
+# [Loops, Functions, and Logical Statements]{style="color:white;"} {background-color="#8FA9C2"}
 
 ## What is the Difference Between Vectorization and Iteration?
 
@@ -117,9 +117,10 @@ for(i in 1:4) {
   loop_dat$N[i + 1] <- loop_dat$N[i]*exp(0.5*(1 - loop_dat$N[i]/30))
 }
 loop_dat
+webr::
 ```
 
-## Now onto a More Complex `for` Loop 
+## Now Onto a More Complex `for` Loop 
 
 ```{webr-r}
 # This is a stupid example, but it creates some data for us.
@@ -141,10 +142,10 @@ list.files(getwd(), pattern = "WeatherStation_")
 
 
 
-- While loops are a good skill to know for people that write their own algorithms ^[Their usage, however, can be more niche as they are used when the number of iterations is not known a priori and reach completion via convergence criterion such as the max number of iterations or some metric like Euclidean Distance] 
+- For people that write their own algorithms, `while` loops are a good skill to know^[Their usage, however, can be more niche as they are used when the number of iterations is not known a priori and reach completion via convergence criterion such as the max number of iterations or some metric like Euclidean Distance] 
 
 
-## Now for Apply Functions
+## Now for `apply` Functions
 
 ```{webr-r}
 # This is the code we just wrote.
@@ -162,7 +163,7 @@ df2 <- do.call(rbind, lapply(paste0(getwd(), "/",
 head(df2)
 ```
 
-## Apply Functions (cont'd)
+## `apply` Functions (cont'd)
 
 ```{webr-r}
 # Create some genetic data.
@@ -220,7 +221,7 @@ df2$WindClass <- ifelse(df2$Wind >= 10, "Windy", "Still")
 ::: panel-tabset
 ### Question
 
-Read in the 20 "Weather Station" data files with a for loop and combine into one dataframe.
+Read in the 20 "Weather Station" data files with a `for` loop and combine into one dataframe.
 
 ```{webr-r}
 # This is the code from before to make the data.
@@ -248,7 +249,7 @@ for(i in seq_along(list.files(getwd(), pattern = "WeatherStation_"))) {
 ::: panel-tabset
 ### Question
 
-Now modify your for loop to omit any files that contain an NA.
+Now modify your `for` loop to omit any files that contain an `NA`.
 
 ```{webr-r}
 # This is the code from before to make the data.
@@ -290,7 +291,7 @@ for(i in seq_along(list.files(getwd(), pattern = "WeatherStation_"))) {
 ::: panel-tabset
 ### Question
 
-Use an apply function to perform a Shapiro-Wilk test on each column of the data set created below (dat) to determine if the data in each column is normally distributed.
+Use an `apply` function to perform a Shapiro-Wilk test on each column of the data set created below (dat) to determine if the data in each column is normally distributed.
 
 ```{webr-r}
 dat <- data.frame(A = rnorm(100, 10, 5), B = rpois(100, 10), C = rnorm(100, 50, 10),
@@ -313,7 +314,7 @@ apply(dat, 2, shapiro.test)
 ::: panel-tabset
 ### Question
 
-Make a column in the data created below (a subset of the weather station data) for week. If X (this is the row ID or day of the month) is 1-7 Week should be 1, days 8-14 = week 2, 15-21 = week 3, 22-28 = week 4, and days 28-30 should be assigned a value of NA.
+Make a column in the data created below (a subset of the weather station data) for week. When `X` (this is the row ID or day of the month) is 1-7, `Week` should be 1; when `X` (day) is 8-14, `Week` should be 2; when `X` (day) is 15-21, `Week` should be 3; when `X` (day) is 22-28, `Week` should be 4; and for `X` (day) from 28-30, `Week` should be assigned a value of `NA`.
 
 ```{webr-r}
 # Make some data.
@@ -349,7 +350,7 @@ file.remove(list.files(getwd(), pattern = "WeatherStation_"))
 
 ## Function Structure
 
-> Like a grammatically correct sentence, functions require a function name, argument and a returned object
+> Functions are like a grammatically correct sentences; they require a function name, argument and body.
 
 . . .
 
@@ -397,7 +398,7 @@ m <- function(x){X = x^2; invisible(x+1); Y = x^3}
 paste(m(3))
 ```
 
-## `r fontawesome::fa("triangle-exclamation", "white")` Functions need a object call, for example, `x` or a `return(x)` in order to return output from `x` to the global environment {.center background-color="#447099"}
+## `r fontawesome::fa("triangle-exclamation", "white")` Functions need an object call (i.e. `x` or a `return(x)`) in order to return output from `x` to the global environment {.center background-color="#447099"}.
 
 # [R Function's Extended]{style="color:white;"} {background-color="#8FA9C2"}
 
@@ -1070,7 +1071,7 @@ hist(M$x);hist(M_new)
 ::: panel-tabset
 ### Question
 
-Using the purrr package, write a function that takes a list of numeric vectors and returns a list of their means. Use `purrr::map`.
+Using the `purrr` package, write a function that takes a list of numeric vectors and returns a list of their means. Use `purrr::map`.
 
 ```{webr-r}
 set.seed(1)
