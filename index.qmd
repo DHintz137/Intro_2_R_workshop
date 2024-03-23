@@ -484,34 +484,97 @@ f(1,2)
 f(1,2,3)
 ```
 
-## Using the Three Dots Ellipsis, `...`
+## The Ellipsis (`...`) Argument (1)
+
+```{webr-r}
+f1 <- function(x, ...){
+  ...length()
+  }
+f1(1)      # 0 argument passed to `...`
+f1(1,2)    # 1 arguments passed to `...`
+f1(1,2,3)  # 2 arguments passed to `...`
+
+f2 <- function(x, ...){
+  list(...)
+  }
+f2(1,2,3) # `1` passed to `x`, `2` and `3` passed to `...`
+```
+. . . 
+
+::: {style="margin-top: 10px;"}
+:::
 
 ```{webr-r}
 rnorm
-
 random_num_gen <- function(x, ...) {
   rnorm(x, ...)
 }
 
 set.seed(1); random_num_gen(5)
 set.seed(1); random_num_gen(5, mean = 3, sd = 1.5)
+```
 
-formals(median) |> names() # defined with "..."
-formals(mean) |> names()   # defined with "..."
-formals(matrix) |> names() # NOT defined with "..."
+## The Ellipsis (`...`) Argument (2)
 
-f1 <- function(x, ...){
+```{webr-r}
+# mean and median defined with `...`
+f3 <- function(x, ...){
   out <- list(mean(x, ...), median(x, ...))
   out
 }
-f1(x=c(1:8,NA), na.rm = TRUE)
-f1(x=c(1:8,NA), random_message = "Save the bees")
-f2 <- function(x, ...){
+
+(k = c(1:8,NA))
+f3(x=k, na.rm = TRUE)                                        # Works 
+f3(x=k, na.rm = TRUE, random_message = "Save the bees")      # Works 
+
+# matrix not defined with "..."
+f4 <- function(x, ...){
   out <- list(mean(x, ...), median(x, ...), matrix(x,...))
-  out
+  return(out)
 }
-f2(x=c(1:8,NA), na.rm = TRUE)
+
+f4(x=k, na.rm = TRUE)                                        # Fails
+list(mean(k,na.rm = TRUE),median(k,na.rm = TRUE),matrix(k))
 ```
+
+::: aside
+\``...`\` has pros and cons, for more info see [here](https://adv-r.hadley.nz/functions.html#fun-dot-dot-dot)
+:::
+
+::: {.notes}
+- Functions that were defined without `...`, will fail to execute when arguments are given to the Ellipsis, and restricts future users
+of having full access to arguments nested function arguments with the larger function 
+
+- Because of this, some package developers in R, are advocates for **all** functions being defined with `...`! 
+:::
+
+## The Ellipsis (`...`) Argument (3)
+
+So why does `f5` work?
+
+```{webr-r}
+#| context: setup
+defined_arguments <- function(...){
+  f <- list(...);out = lapply(f,function(x) names(formals(x)))
+  names(out) = as.character(substitute(list(...)))[-1];out
+}
+```
+
+```{webr-r}
+defined_arguments(matrix, data.frame, as.data.frame) # which are defined with `...`
+k = c(1:3,NA)
+
+matrix(k, na.rm = TRUE)
+data.frame(k, na.rm = TRUE)
+as.data.frame(k,na.rm = TRUE)
+
+f5 <- function(x, ...){
+  out <- list(mean(x, ...), median(x, ...), as.data.frame(x,...))
+  return(out)
+}
+f5(x=k, na.rm = TRUE)
+```
+
 
 ## Anonymous Functions
 
