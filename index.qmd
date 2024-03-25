@@ -121,7 +121,6 @@ for(i in 1:4) {
   loop_dat$N[i + 1] <- loop_dat$N[i]*exp(0.5*(1 - loop_dat$N[i]/30))
 }
 loop_dat
-webr::
 ```
 
 ## Now Onto a More Complex `for` Loop 
@@ -453,7 +452,7 @@ f2() # Functions can access the global environment
 
 f3 <- function() {L <<- 10} 
 f3() # returns L to the parent environment
-L    # now we also print L from global environment
+L    # now we also prints L from global environment
 
 remove(L)
 f4 <- function(){L = 100; f3(); L}
