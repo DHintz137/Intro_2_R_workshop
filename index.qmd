@@ -3,6 +3,10 @@ engine: knitr
 webr: 
   show-startup-message: false  
   packages: ['purrr']
+footer: "&nbsp;"
+title-slide-attributes: 
+  data-footer: "My custom footer content"
+include-after-body: add-custom-footer.html
 format:
   revealjs:
     include-in-header:
@@ -17,7 +21,6 @@ format:
 filters: 
  - webr
 ---
-
 
 # [An Advanced Introduction to R]{
   style="color:#FFFFFF; 
@@ -42,6 +45,7 @@ filters:
                       1px -1px 0 #000, 
                       -1px 1px 0 #000, 
                       1px 1px 0 #000;">A R Ladies Workshop</h3>
+
 
 # [Outline (1)]{style="font-size: 55px;"} 
 
@@ -350,7 +354,7 @@ file.remove(list.files(getwd(), pattern = "WeatherStation_"))
 
 ## Function Structure
 
-> Functions are like a grammatically correct sentences; they require a function name, argument and body.
+> Functions are like a grammatically correct sentences; they require arguments, a body, and an environment^[See Hadley's section on [function-fundamentals](https://adv-r.hadley.nz/functions.html#function-fundamentals) for more detials].
 
 . . .
 
@@ -412,17 +416,72 @@ body(f) #> x^2
 environment(f) # <environment: R_GlobalEnv>
 ```
 
-## More on Environments
+::: aside
+See [Function-Components](https://adv-r.hadley.nz/functions.html#fun-components)
+:::
+## More on Environments 
 
 ```{webr-r}
 k <- function() list(ls(),environment())
 k() # k() has its own environment
-list(ls()[1:5],environment())
+list(ls()[1:5],environment()) 
+# all other environments sits on top of the global environments 
 ```
+
+. . . 
+
+- Environments are important to understand as they relate to **Lexical scoping**
+
+## Lexical Scoping 
+
+::: columns
+::: {.column width="30%" style="padding-right: 0px;"}
+![](images/castle.jpeg){height="425px"}
+:::
+::: {.column width="70%" style="padding-right: 0px;"}
+```{webr-r}
+#| class-source: wide_chunck 
+#| classes: wide_chunck 
+#| echo: true
+f1 <- function(){L = 1; L}
+f1()
+L # Error: object 'L' not found
+
+K = 3
+f2 <- function() {K} 
+f2() # Functions can access the global environment
+
+f3 <- function() {L <<- 10} 
+f3() # returns L to the parent environment
+L    # now we also print L from global environment
+
+remove(L)
+f4 <- function(){L = 100; f3(); L}
+f4()
+L
+# Avoid using `<<-` when possible!!
+```
+:::
+:::
+
+
+::: {.notes}
+- Imagine a castle where of the three levels (Keep, Main, Lower), some levels can see more levels than others. For example from the Keep, you can see inside the keep, into the Main level as well as the lower level. In `R`, their are also varying degrees of *"sight"*. For example, inside a function, objects that were defined inside the function are visible as well as objects that were defined outside the function, say like the global environment.    
+
+- If you were in the castle and you wanted to search for an object, one possible procedure is to first search the lower level (say a f3), then if you still haven't found it, proceed to search the main level (f4) and finally, if still haven't found it, you would search the keep and if were still not found you would declare the object is not in the castle. This is analogous to how lexical scoping works in R.
+
+- In R, the `<<-` operator does not simply assign a value to a variable in the parent environment; it assigns a value to a variable in the parent environment if the variable already exists there. If the variable does not exist in the parent environment, R searches up through the chain of environments until it finds an environment where the variable exists and assigns the value there. If it does not find the variable in any parent environments, it will assign the value in the global environment.
+:::
+
+::: aside
+For more information see [here](https://adv-r.hadley.nz/functions.html#lexical-scoping)
+:::
+
 
 ## Default Argument Assignment
 
 ```{webr-r}
+#| echo: true
 f <- function(a = 1) a
 f()
 ```
@@ -510,9 +569,10 @@ set.seed(1); random_num_gen(5)
 set.seed(1); random_num_gen(5, mean = 3, sd = 1.5)
 ```
 
-::: aside
-The \``...`\` argument is also known as a Ellipsis or simply  dot-dot-dot.
-:::
+. . .
+
+- The \``...`\` argument is also known as a Ellipsis or simply dot-dot-dot.
+
 ## `...` dot-dot-dot (2)
 
 ```{webr-r}
@@ -1204,8 +1264,16 @@ sum(c(1, 2) * 1) + sum(c(3, 4) * 2)
 ```
 :::
 
+# `r fontawesome::fa("hand-holding-heart", "white")` [Acknowledgements]{style="color:white; font-size: 70px;"} {background-color="#8FA9C2"}
 
-# [Wanna Hear From Us?]{style="color:white; font-size: 70px;"} {background-color="#447099"}
+::: incremental
+- Thank you Molly Caldwell your efforts organizing! 
+- A big thanks to the R-Ladies Community!
+- Thank you Seth for your patience in my experiment using quarto revealjs and `webr`!!
+- Photo Credit: [Conny Schneider](https://unsplash.com/photos/a-blue-background-with-lines-and-dots-xuTJZ7uD7PI) `r fontawesome::fa("camera-retro", "white")`
+:::
+
+# [Wanna Hear From Us?]{style="color:white; font-size: 70px;"} {background-color="#8FA9C2"}
 
 ::: columns
 ::: {.column width="50%"}
