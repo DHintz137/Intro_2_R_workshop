@@ -588,9 +588,8 @@ f4(x=k, na.rm = TRUE)                                        # Fails
 list(mean(k,na.rm = TRUE),median(k,na.rm = TRUE),matrix(k))
 ```
 
-::: aside
 \``...`\` has pros and cons, for more info see [here](https://adv-r.hadley.nz/functions.html#fun-dot-dot-dot)
-:::
+
 
 ::: {.notes}
 - Functions that were defined without `...`, will fail to execute when arguments are given to the Ellipsis, and restricts future users
@@ -657,10 +656,10 @@ sapply(1:5,function(x) x * 2)
 :::
 
 ```{webr-r}
-~ .x * 2
-\(x) x*2
-purrr::map_dbl(1:5,~ .x * 2)
-purrr::map_dbl(1:5,\(x) x*2)
+library(purrr)
+# ~ .x * 2  or \(x) x*2
+map_dbl(1:5,~ .x * 2)
+map_dbl(1:5,\(x) x*2)
 ```
 
 # [Functional Programming with `base` R]{style="color:white;"} {background-color="#8FA9C2"}
