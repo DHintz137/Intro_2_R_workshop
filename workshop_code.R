@@ -216,6 +216,28 @@ environment(f) # <environment: R_GlobalEnv>
 k <- function() list(ls(),environment())
 k() # k() has its own environment
 list(ls()[1:5],environment())
+# all other environments sit on top of the global environments 
+
+# - Environments are important to understand as they relate to **Lexical scoping**
+
+##### Lexical Scoping #####
+f1 <- function(){L = 1; L}
+f1()
+L # Error: object 'L' not found
+
+K = 3
+f2 <- function() {K} 
+f2() # Functions can access the global environment
+
+f3 <- function() {L <<- 10} 
+f3() # returns L to the parent environment
+L    # now we also prints L from global environment
+
+remove(L)
+f4 <- function(){L = 100; f3(); L}
+f4()
+L
+# Avoid using `<<-` when possible!!
 
 ##### Default Argument Assignment #####
 
@@ -269,7 +291,16 @@ f <- function(a, b, c) {
 f(1,2)
 f(1,2,3)
 
-##### Using the Three Dots Ellipsis, `...` #####
+##### `...` dot-dot-dot (1) #####
+f1 <- function(x, ...){...length()}
+f1(1)      # 0 argument passed to `...`
+f1(1,2)    # 1 arguments passed to `...`
+f1(1,2,3)  # 2 arguments passed to `...`
+
+f2 <- function(x, ...){list(...)}
+f2(1,2,3) # `1` passed to `x`, `2` and `3` passed to `...`
+
+
 rnorm
 random_num_gen <- function(x, ...) {
   rnorm(x, ...)
@@ -278,14 +309,65 @@ random_num_gen <- function(x, ...) {
 set.seed(1); random_num_gen(5)
 set.seed(1); random_num_gen(5, mean = 3, sd = 1.5)
 
+# - The `...` argument is also known as an Ellipsis or simply dot-dot-dot.
+
+##### `...` dot-dot-dot (2) #####
+
+# mean and median defined with `...`
+f3 <- function(x, ...){
+  out <- list(mean(x, ...), median(x, ...))
+  out
+}
+
+(k = c(1:8,NA))
+f3(x=k, na.rm = TRUE)                                        # Works 
+f3(x=k, na.rm = TRUE, random_message = "Save the bees")      # Works 
+
+# matrix not defined with "..."
+f4 <- function(x, ...){
+  out <- list(mean(x, ...), median(x, ...), matrix(x,...))
+  return(out)
+}
+
+f4(x=k, na.rm = TRUE)                                        # Fails
+list(mean(k,na.rm = TRUE),median(k,na.rm = TRUE),matrix(k))
+
+# `...` has pros and cons, for more info see [here](https://adv-r.hadley.nz/functions.html#fun-dot-dot-dot)
+
+##### `...` dot-dot-dot (3) #####
+
+# So why does `f5` work?
+
+defined_arguments <- function(...){
+  f <- list(...);out = lapply(f,function(x) names(formals(x)))
+  names(out) = as.character(substitute(list(...)))[-1];out
+}
+
+defined_arguments(matrix, data.frame, as.data.frame) # which are defined with `...` ?
+(k = c(1:3,NA))
+
+matrix(k, na.rm = TRUE)
+data.frame(k, na.rm = TRUE)
+as.data.frame(k,na.rm = TRUE)
+
+f5 <- function(x, ...){
+  out <- list(mean(x, ...), median(x, ...), as.data.frame(x,...))
+  return(out)
+}
+f5(x=k, na.rm = TRUE)
+
 ##### Anonymous Functions #####
 # "An Anonymous Function (also known as a lambda expression) is a function definition that is not bound to an identifier. That is, it is a function that is created and used, but never assigned to a variable" (see [link](https://coolbutuseless.github.io/2019/03/13/anonymous-functions-in-r-part-1/))
 
 # `base` R anonymous function syntax:
-sapply(1:2, function(x) x + 1)
+function(x) x * 2
+sapply(1:5,function(x) x * 2)
 
 # `purrr`’s anonymous function syntax:
-purrr::map_int(1:2, ~.x + 1)
+~ .x * 2
+\(x) x*2
+purrr::map_dbl(1:5,~ .x * 2)
+purrr::map_dbl(1:5,\(x) x*2)
 
 #### Functional Programming with `base` R ####
 ##### Functional Programming with `base` R #####
@@ -295,6 +377,13 @@ purrr::map_int(1:2, ~.x + 1)
 
 apply(X, 1, mean) # row-wise 
 apply(X, 2, mean) # col-wise
+
+(J = array(rep(1,12), c(2, 2, 3)))
+apply(J, c(1), sum)
+apply(J, c(2), sum)
+apply(J, c(3), sum)
+apply(J, c(1,2), sum)
+apply(J, c(1,3), sum)
 
 ###### `sapply` ######
 
@@ -353,10 +442,11 @@ Reduce(intersect,L)
 ##### Functional Programming with `purrr` #####
 ##### `purrr` Examples #####
 ###### `map` ######
-1:10 |> map(rnorm, n = 5)
+set.seed(0); 1:5 |> map(rnorm, n = 4)
 
 # You can also use an anonymous function
-1:10 |> map(\(x) rnorm(5, x))
+set.seed(0); 1:5 |> map(\(x) rnorm(n=4, mean = x, sd = 1))
+set.seed(0); 1:5 |> map(~ rnorm(n=4, mean = .x, sd = 1))
 
 ###### `map2` ######
 x <- list(1, 1, 1)
@@ -370,6 +460,9 @@ y <- list(10, 20, 30)
 z <- list(100, 200, 300)
 
 pmap(list(x, y, z), sum)
+
+set.seed(0); list(1:2,1:2,1:2) |> pmap(\(x,y,z) rhyper(3, m = x, n = y, k = z))
+# These numbers represent the number of white balls drawn in each of the 3 draws from the urn
 
 ###### `reduce` ######
 set.seed(1)

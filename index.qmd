@@ -3,10 +3,6 @@ engine: knitr
 webr: 
   show-startup-message: false  
   packages: ['purrr']
-footer: "&nbsp;"
-title-slide-attributes: 
-  data-footer: "My custom footer content"
-include-after-body: add-custom-footer.html
 format:
   revealjs:
     include-in-header:
@@ -353,7 +349,7 @@ file.remove(list.files(getwd(), pattern = "WeatherStation_"))
 
 ## Function Structure
 
-> Functions are like a grammatically correct sentences; they require arguments, a body, and an environment^[See Hadley's section on [function-fundamentals](https://adv-r.hadley.nz/functions.html#function-fundamentals) for more detials].
+> Functions are like a grammatically correct sentences; they require arguments, a body, and an environment^[See Hadley's section on [function-fundamentals](https://adv-r.hadley.nz/functions.html#function-fundamentals) for more details].
 
 . . .
 
@@ -424,7 +420,7 @@ See [Function-Components](https://adv-r.hadley.nz/functions.html#fun-components)
 k <- function() list(ls(),environment())
 k() # k() has its own environment
 list(ls()[1:5],environment()) 
-# all other environments sits on top of the global environments 
+# all other environments sit on top of the global environments 
 ```
 
 . . . 
@@ -439,9 +435,6 @@ list(ls()[1:5],environment())
 :::
 ::: {.column width="70%" style="padding-right: 0px;"}
 ```{webr-r}
-#| class-source: wide_chunck 
-#| classes: wide_chunck 
-#| echo: true
 f1 <- function(){L = 1; L}
 f1()
 L # Error: object 'L' not found
@@ -473,7 +466,7 @@ L
 :::
 
 ::: aside
-For more information see [here](https://adv-r.hadley.nz/functions.html#lexical-scoping)
+For more information see [here](https://adv-r.hadley.nz/functions.html#lexical-scoping).
 :::
 
 
@@ -570,7 +563,7 @@ set.seed(1); random_num_gen(5, mean = 3, sd = 1.5)
 
 . . .
 
-- The \``...`\` argument is also known as a Ellipsis or simply dot-dot-dot.
+- The \``...`\` argument is also known as an Ellipsis or simply dot-dot-dot.
 
 ## `...` dot-dot-dot (2)
 
@@ -650,7 +643,8 @@ f5(x=k, na.rm = TRUE)
 :::
 
 ```{webr-r}
-sapply(1:2, function(x) x + 1)
+function(x) x * 2
+sapply(1:5,function(x) x * 2)
 ```
 
 . . .
@@ -663,7 +657,10 @@ sapply(1:2, function(x) x + 1)
 :::
 
 ```{webr-r}
-purrr::map_int(1:2, ~.x + 1)
+~ .x * 2
+\(x) x*2
+purrr::map_dbl(1:5,~ .x * 2)
+purrr::map_dbl(1:5,\(x) x*2)
 ```
 
 # [Functional Programming with `base` R]{style="color:white;"} {background-color="#8FA9C2"}
@@ -808,10 +805,11 @@ Reduce(intersect,L)
 ### `map`
 
 ```{webr-r}
-1:10 |> map(rnorm, n = 5)
+set.seed(0); 1:5 |> map(rnorm, n = 4)
 
 # You can also use an anonymous function
-1:10 |> map(\(x) rnorm(5, x))
+set.seed(0); 1:5 |> map(\(x) rnorm(n=4, mean = x, sd = 1))
+set.seed(0); 1:5 |> map(~ rnorm(n=4, mean = .x, sd = 1))
 ```
 
 ### `map2`
@@ -831,8 +829,16 @@ y <- list(10, 20, 30)
 z <- list(100, 200, 300)
 
 pmap(list(x, y, z), sum)
+
+set.seed(0); list(1:2,1:2,1:2) |> pmap(\(x,y,z) rhyper(3, m = x, n = y, k = z))
+# These numbers represent the number of white balls drawn in each of the 3 draws from the urn
 ```
 
+::: {.notes}
+- For the first combination `(x = 1, y = 1, z = 1)`, three numbers are generated based on the hypergeometric distribution parameters, resulting in [1] 0 1 1.
+
+- For the second combination `(x = 2, y = 2, z = 2)`, it generates another set of three numbers, resulting in [1] 1 0 1.
+:::
 ### `reduce`
 
 ```{webr-r}
